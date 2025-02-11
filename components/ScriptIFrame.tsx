@@ -7,7 +7,7 @@ export default function ScriptIFrame() {
   return (
     <div className="absolute inset-0 z-0">
       <iframe
-        allow="accelerometer; autoplay; camera; encrypted-media; geolocation; gyroscope; microphone; magnetometer; midi; vr;"
+        allow="camera; geolocation; microphone;"
         className="w-full h-full"
         srcDoc={script.srcDoc}
         title="output"
