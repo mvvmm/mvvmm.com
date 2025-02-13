@@ -1,24 +1,30 @@
+let value = 0;
+
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight, WEBGL);
+  createCanvas(100, 100);
+
+  describe(
+    "A gray square with a black square at its center. The inner square changes color when the user presses and releases a mouse button.",
+  );
 }
 
 function draw() {
-  background(0);
-  rotateY(0);
+  background(200);
 
-  for (let j = 0; j < 3; j++) {
-    push();
-    for (let i = 0; i < 100; i++) {
-      translate(
-        sin(frameCount * 0.005 + j) * 100,
-        sin(frameCount * 0.005 + j) * 100,
-        i * 0.1,
-      );
-      rotateZ(frameCount * 0.002);
-      push();
-      torus(10, 20);
-      pop();
-    }
-    pop();
+  // Style the square.
+  fill(value);
+
+  // Draw the square.
+  square(25, 25, 50);
+}
+
+// Toggle the square's color when the user clicks.
+function mouseClicked() {
+  if (value === 0) {
+    value = 255;
+  } else {
+    value = 0;
   }
+  // Uncomment to prevent any default behavior.
+  // return false;
 }

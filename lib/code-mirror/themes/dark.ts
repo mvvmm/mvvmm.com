@@ -25,7 +25,8 @@ const rose = "#fb7185",
   darkgray4 = "#52525b",
   darkgray3 = "#3f3f46",
   darkgray2 = "#27272a",
-  darkgray1 = "#18181b";
+  darkgray1 = "#18181b",
+  selection = "rgba(82, 82, 91, .8)"; // darkgray4
 
 const theme = EditorView.theme({
   "&": {
@@ -36,7 +37,7 @@ const theme = EditorView.theme({
   },
   "&.cm-focused .cm-cursor": { borderLeftColor: lightgray4 },
   "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection":
-    { backgroundColor: lightgray4 },
+    { backgroundColor: selection },
   ".cm-panels": { backgroundColor: darkgray2, color: lightgray3 },
   ".cm-button": {
     backgroundColor: darkgray3,
@@ -54,7 +55,6 @@ const theme = EditorView.theme({
   ".cm-line": {
     backgroundColor: darkgray1,
   },
-  // ".cm-selectionMatch": { backgroundColor: "#aafe661a" },
   ".cm-matchingBracket, .cm-nonmatchingBracket": {
     color: rose,
     backgroundColor: "#bad0f847 !important",
@@ -119,6 +119,7 @@ const highlight = HighlightStyle.define([
       tags.modifier,
       tags.self,
       tags.namespace,
+      tags.literal,
     ],
     color: amber,
   },

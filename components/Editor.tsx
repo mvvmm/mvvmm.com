@@ -28,7 +28,9 @@ export const Editor = () => {
         ...setup,
         javascript(),
         baseTheme,
+        // ...oneDarkTheme,
         ...darkTheme,
+
         updateListener,
       ],
       parent: editorRef.current,
@@ -38,7 +40,7 @@ export const Editor = () => {
   }, []);
 
   return (
-    <div className="w-full h-full p-4 absolute inset-0 z-10 no-scrollbar">
+    <div className="h-full overflow-scroll p-4 absolute inset-0 no-scrollbar z-10">
       <div ref={editorRef} />
     </div>
   );

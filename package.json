@@ -5,8 +5,8 @@
   "scripts": {
     "clean-zone-identifiers": "node build-scripts/removeZoneIdentifiers.js",
     "copy-scripts": "node build-scripts/copy-scripts.js",
-    "predev": "yarn clean-zone-identifiers && yarn copy-scripts",
-    "prebuild": " yarn clean-zone-identifiers && yarn copy-scripts",
+    "predev": "yarn clean-zone-identifiers",
+    "prebuild": " yarn clean-zone-identifiers",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

@@ -14,11 +14,9 @@ export default async function Page({
   const css = await getCSSContents(_params.script);
 
   return (
-    <>
-      <ScriptProvider script={script} css={css}>
-        <Editor />
-        <ScriptIFrame />
-      </ScriptProvider>
-    </>
+    <ScriptProvider script={script} css={css}>
+      <Editor />
+      <ScriptIFrame />
+    </ScriptProvider>
   );
 }

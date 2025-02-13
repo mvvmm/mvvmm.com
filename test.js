@@ -1,7 +1,3 @@
-function preload() {
-  background(0);
-}
-
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight, WEBGL);
 }
@@ -9,6 +5,7 @@ function setup() {
 function draw() {
   background(0);
   rotateY(0);
+  const myVar = test;
 
   for (let j = 0; j < 3; j++) {
     push();

@@ -1,5 +1,6 @@
+import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { EditorView } from "@codemirror/view";
-import { HighlightStyle, tags } from "@codemirror/highlight";
+import { tags } from "@lezer/highlight";
 
 const rose = "#e11d48",
   pink = "#db2777",
@@ -149,6 +150,6 @@ const highlight = HighlightStyle.define([
   { tag: tags.invalid, color: lightgray1 },
 ]);
 
-const lightTheme = [theme, highlight];
+const lightHighliting = syntaxHighlighting(highlight, { fallback: true });
 
-export { lightTheme };
+export const lightTheme = [theme, lightHighliting];
