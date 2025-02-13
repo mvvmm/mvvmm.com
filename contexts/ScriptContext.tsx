@@ -9,10 +9,12 @@ const scriptContext = createContext({} as ScriptContext);
 export const ScriptProvider = ({
   script,
   css,
+  scale = 1,
   children,
 }: {
   script: string;
   css: string;
+  scale?: number;
   children: Readonly<ReactNode>;
 }) => {
   const [_script, setScript] = useState(script);
@@ -25,7 +27,7 @@ export const ScriptProvider = ({
 
   return (
     <scriptContext.Provider
-      value={{ script: _script, srcDoc, css, updateScript }}
+      value={{ script: _script, srcDoc, css, scale, updateScript }}
     >
       {children}
     </scriptContext.Provider>

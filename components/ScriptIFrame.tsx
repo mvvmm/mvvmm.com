@@ -8,12 +8,16 @@ export default function ScriptIFrame() {
     <div className="absolute inset-0 z-0 w-full h-full dark:bg-black">
       <iframe
         allow="camera; geolocation; microphone;"
-        className="w-full h-full z-10 bg-black"
+        className="w-full h-full bg-black"
         srcDoc={script.srcDoc}
         title="output"
         sandbox="allow-scripts allow-same-origin"
-        width="100%"
-        height="100%"
+        style={{
+          transform: `scale(${script.scale})`,
+          transformOrigin: "top left",
+          width: `${(1 / script.scale) * 100}%`,
+          height: `${(1 / script.scale) * 100}%`,
+        }}
       />
     </div>
   );

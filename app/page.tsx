@@ -1,3 +1,5 @@
+import ScriptIFrame from "@/components/ScriptIFrame";
+import { ScriptProvider } from "@/contexts/ScriptContext";
 import { getCSSContents } from "@/data/getCSSContents";
 import { getScriptContents } from "@/data/getScriptContents";
 import { getScripts } from "@/data/getScripts";
@@ -25,7 +27,13 @@ export default async function Home() {
             key={script}
             className="relative w-full h-80"
           >
-            {script}
+            <ScriptProvider
+              script={scriptArray[i]}
+              css={cssArray[i]}
+              scale={0.33}
+            >
+              <ScriptIFrame />
+            </ScriptProvider>
           </Link>
         ))}
       </div>
