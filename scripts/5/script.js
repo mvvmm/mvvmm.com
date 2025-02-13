@@ -1,3 +1,7 @@
+function preload() {
+  background(0);
+}
+
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight, WEBGL);
 }
@@ -21,4 +25,8 @@ function draw() {
     }
     pop();
   }
+}
+
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
 }
