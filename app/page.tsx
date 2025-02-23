@@ -25,14 +25,14 @@ export default async function Home() {
           <Link
             href={`/editor/${script}`}
             key={script}
-            className="relative w-full h-80"
+            className="relative w-full h-80 transition-transform hover:scale-[1.01] hover:z-10"
           >
             <ScriptProvider
               script={scriptArray[i]}
               css={cssArray[i]}
               scale={0.33}
             >
-              <ScriptIFrame className="-z-10" />
+              <ScriptIFrame className="pointer-events-none" />
             </ScriptProvider>
           </Link>
         ))}
