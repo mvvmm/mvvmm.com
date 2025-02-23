@@ -1,6 +1,6 @@
 "use client";
 
-import { useScript } from "@/contexts/ScriptContext";
+import { useExperience } from "@/contexts/ExperienceContext";
 import { setup } from "@/lib/code-mirror/setup";
 import { baseTheme } from "@/lib/code-mirror/themes/base";
 import { darkTheme } from "@/lib/code-mirror/themes/dark";
@@ -9,7 +9,7 @@ import { EditorView, ViewUpdate } from "@codemirror/view";
 import { useEffect, useRef } from "react";
 
 export const Editor = () => {
-  const script = useScript();
+  const experience = useExperience();
   const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,12 +18,15 @@ export const Editor = () => {
     const updateListener = EditorView.updateListener.of((v: ViewUpdate) => {
       if (v.docChanged) {
         const newCode = v.state.doc.toString();
-        script.updateScript(newCode);
+        experience.updateExperience({
+          fileName: experience.activeFile.name,
+          updatedFileContents: newCode,
+        });
       }
     });
 
     const view = new EditorView({
-      doc: script.script,
+      doc: experience.activeFile.contents,
       extensions: [
         ...setup,
         javascript(),

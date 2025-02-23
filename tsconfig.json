@@ -29,7 +29,7 @@
     ".next/types/**/*.ts",
     "build-scripts/removeZoneIdentifiers.js",
     "build-scripts/copy-scripts.js",
-    "scripts/2/script.js"
+    "experiences/rps/script.js"
   ],
   "exclude": ["node_modules"]
 }

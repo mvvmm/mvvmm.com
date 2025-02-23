@@ -1,13 +1,14 @@
 "use client";
 
-import { useScript } from "@/contexts/ScriptContext";
+import { useExperience } from "@/contexts/ExperienceContext";
 
-export default function ScriptIFrame({
+export default function ExperienceIFrame({
   className = "",
 }: {
   className?: string;
 }) {
-  const script = useScript();
+  const experience = useExperience();
+
   return (
     <div
       className={`absolute inset-0 z-0 w-full h-full dark:bg-black ${className}`}
@@ -15,14 +16,14 @@ export default function ScriptIFrame({
       <iframe
         allow="camera; geolocation; microphone;"
         className="w-full h-full bg-black"
-        srcDoc={script.srcDoc}
+        srcDoc={experience.srcDoc}
         title="output"
         sandbox="allow-scripts allow-same-origin"
         style={{
-          transform: `scale(${script.scale})`,
+          transform: `scale(${experience.iframeScale})`,
           transformOrigin: "top left",
-          width: `${(1 / script.scale) * 100}%`,
-          height: `${(1 / script.scale) * 100}%`,
+          width: `${(1 / experience.iframeScale) * 100}%`,
+          height: `${(1 / experience.iframeScale) * 100}%`,
         }}
       />
     </div>
