@@ -2,10 +2,16 @@
 
 import { useScript } from "@/contexts/ScriptContext";
 
-export default function ScriptIFrame() {
+export default function ScriptIFrame({
+  className = "",
+}: {
+  className?: string;
+}) {
   const script = useScript();
   return (
-    <div className="absolute inset-0 z-0 w-full h-full dark:bg-black">
+    <div
+      className={`absolute inset-0 z-0 w-full h-full dark:bg-black ${className}`}
+    >
       <iframe
         allow="camera; geolocation; microphone;"
         className="w-full h-full bg-black"

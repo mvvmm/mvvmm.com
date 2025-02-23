@@ -32,7 +32,7 @@ export default async function Home() {
               css={cssArray[i]}
               scale={0.33}
             >
-              <ScriptIFrame />
+              <ScriptIFrame className="-z-10" />
             </ScriptProvider>
           </Link>
         ))}
