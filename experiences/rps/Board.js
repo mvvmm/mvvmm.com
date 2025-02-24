@@ -65,5 +65,6 @@ class Board {
   resize() {
     this.width = windowWidth / NUM_COLS;
     this.height = windowHeight / NUM_ROWS;
+    this.init();
   }
 }
