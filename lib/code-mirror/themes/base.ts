@@ -1,7 +1,5 @@
 import { EditorView } from "@codemirror/view";
 
-const fontSize = "1.2rem !important";
-
 export const baseTheme = EditorView.baseTheme({
   ".cm-selectionLayer": {
     pointerEvents: "none",
@@ -18,7 +16,6 @@ export const baseTheme = EditorView.baseTheme({
   },
   ".cm-scroller": {
     fontFamily: `"Fira Code", monospace !important`,
-    fontSize: fontSize,
   },
   "&.cm-focused .cm-cursor": {
     borderLeftWidth: "2px",

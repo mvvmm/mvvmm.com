@@ -7,6 +7,7 @@ import { darkTheme } from "@/lib/code-mirror/themes/dark";
 import { javascript } from "@codemirror/lang-javascript";
 import { EditorView, ViewUpdate } from "@codemirror/view";
 import { useEffect, useRef } from "react";
+import Controls from "./controls/Controls";
 
 export const Editor = () => {
   const experience = useExperience();
@@ -40,11 +41,12 @@ export const Editor = () => {
     });
 
     return () => view.destroy(); // Cleanup on unmount
-  }, []);
+  }, [experience.activeFile.name]);
 
   return (
-    <div className="h-full overflow-scroll p-4 absolute inset-0 no-scrollbar z-10">
-      <div ref={editorRef} />
+    <div className="absolute inset-0 flex flex-col z-10 p-2">
+      <Controls />
+      <div ref={editorRef} className="flex-1 overflow-auto no-scrollbar" />
     </div>
   );
 };

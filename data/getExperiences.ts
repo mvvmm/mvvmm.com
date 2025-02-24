@@ -16,6 +16,7 @@ export async function getExperiences(): Promise<Experience[]> {
       const experience = {} as Experience;
 
       experience.name = dir;
+      experience.fileNames = [] as string[];
       experience.scripts = [] as Script[];
       experience.stylesheets = [] as Stylesheet[];
 
@@ -27,6 +28,8 @@ export async function getExperiences(): Promise<Experience[]> {
 
       const files = await readdir(experience.path);
       for (const file of files) {
+        experience.fileNames.push(file);
+
         if (file.endsWith(".js")) {
           const script = {} as Script;
           script.name = file;

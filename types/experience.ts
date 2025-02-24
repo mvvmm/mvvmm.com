@@ -12,6 +12,7 @@ export type ExperienceContext = {
     fileName: string;
     updatedFileContents: string;
   }) => void;
+  updateActiveFile: ({ fileName }: { fileName: string }) => void;
 };
 
 export type Script = {
@@ -31,4 +32,5 @@ export type Experience = {
   name: string;
   scripts: Script[];
   stylesheets: Stylesheet[];
+  fileNames: string[];
 };

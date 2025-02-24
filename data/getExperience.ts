@@ -19,11 +19,14 @@ export async function getExperience({
       decodeURIComponent(experienceName),
     );
     experience.name = experienceName;
+    experience.fileNames = [] as string[];
     experience.scripts = [] as Script[];
     experience.stylesheets = [] as Stylesheet[];
 
     const files = await readdir(experience.path);
     for (const file of files) {
+      experience.fileNames.push(file);
+
       if (file.endsWith(".js")) {
         const script = {} as Script;
         script.name = file;
@@ -40,6 +43,7 @@ export async function getExperience({
         experience.stylesheets.push(stylesheet);
       }
     }
+
     return experience;
   } catch (error) {
     console.error("Error reading scripts directory:", error);

@@ -49,6 +49,10 @@ export const ExperienceProvider = ({
     }
   })();
 
+  const updateActiveFile = ({ fileName }: { fileName: string }) => {
+    _setActiveFileName(fileName);
+  };
+
   const updateExperience = ({
     fileName,
     updatedFileContents,
@@ -90,6 +94,7 @@ export const ExperienceProvider = ({
         srcDoc,
         iframeScale,
         updateExperience,
+        updateActiveFile,
       }}
     >
       {children}

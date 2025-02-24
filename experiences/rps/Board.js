@@ -1,8 +1,6 @@
 const NUM_ROWS = 50;
 const NUM_COLS = 50;
-const THRESHOLD = 3; // Number of moore neighbors needed to win for a square to change
-
-//2 > 1 > 0 > 2
+const THRESHOLD = 3;
 
 class Board {
   constructor() {
@@ -23,10 +21,6 @@ class Board {
       .fill()
       .map(() => Array(this.num_cols).fill());
     this.threshold = THRESHOLD;
-  }
-
-  log() {
-    console.log(this.board);
   }
 
   makeCopy() {

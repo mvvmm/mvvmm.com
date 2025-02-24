@@ -1,4 +1,4 @@
-import { Editor } from "@/components/Editor";
+import { Editor } from "@/components/editor/Editor";
 import ScriptIFrame from "@/components/ExperienceIFrame";
 import { ExperienceProvider } from "@/contexts/ExperienceContext";
 import { getExperience } from "@/data/getExperience";
