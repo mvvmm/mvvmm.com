@@ -46,6 +46,7 @@ export const ExperienceProvider = ({
   const srcDoc = getSrcDoc({
     scripts: _experience.scripts,
     stylesheets: _experience.stylesheets,
+    htmls: _experience.htmls,
   });
 
   const activeFile = (() => {
@@ -61,6 +62,11 @@ export const ExperienceProvider = ({
           _experience.stylesheets.find(
             (stylesheet) => stylesheet.name === _activeFileName,
           ) || ({} as Stylesheet)
+        );
+      case ".html":
+        return (
+          _experience.htmls.find((html) => html.name === _activeFileName) ||
+          ({} as Stylesheet)
         );
       default:
         return {} as File;

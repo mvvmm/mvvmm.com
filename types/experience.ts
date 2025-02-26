@@ -1,4 +1,4 @@
-export type File = Script | Stylesheet;
+export type File = Script | Stylesheet | Html;
 
 export type ExperienceContext = {
   experience: Experience;
@@ -28,10 +28,17 @@ export type Stylesheet = {
   name: string;
 };
 
+export type Html = {
+  contents: string;
+  path: string;
+  name: string;
+};
+
 export type Experience = {
   path: string;
   name: string;
   scripts: Script[];
   stylesheets: Stylesheet[];
+  htmls: Html[];
   fileNames: string[];
 };
