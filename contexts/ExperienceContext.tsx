@@ -23,6 +23,8 @@ import {
   useState,
 } from "react";
 
+const DEBOUNCE_THRESHOLD = 500; // ms
+
 const experienceContext = createContext({} as ExperienceContext);
 
 export const ExperienceProvider = ({
@@ -35,6 +37,7 @@ export const ExperienceProvider = ({
   children: Readonly<ReactNode>;
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [_experience, _setExperience] = useState(experience);
   const [_activeFileName, _setActiveFileName] = useState(
@@ -107,10 +110,17 @@ export const ExperienceProvider = ({
     const updateListener = EditorView.updateListener.of((v: ViewUpdate) => {
       if (v.docChanged) {
         const newCode = v.state.doc.toString();
-        updateExperience({
-          fileName: activeFile.name,
-          updatedFileContents: newCode,
-        });
+
+        // Clear the previous timeout
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+        // Set a new timeout
+        timeoutRef.current = setTimeout(() => {
+          updateExperience({
+            fileName: activeFile.name,
+            updatedFileContents: newCode,
+          });
+        }, DEBOUNCE_THRESHOLD);
       }
     });
 
