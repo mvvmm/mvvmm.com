@@ -30,26 +30,36 @@ export async function getExperience({
 
       switch (file.substring(file.lastIndexOf("."))) {
         case ".js":
+          console.log("JS FILE: ", file);
           const script = {} as Script;
           script.name = file;
           script.path = path.join(experience.path, file);
           script.contents = fs.readFileSync(script.path, "utf-8");
 
           experience.scripts.push(script);
+          break;
+
         case ".css":
+          console.log("CSS FILE: ", file);
+
           const stylesheet = {} as Stylesheet;
           stylesheet.name = file;
           stylesheet.path = path.join(experience.path, file);
           stylesheet.contents = fs.readFileSync(stylesheet.path, "utf-8");
 
           experience.stylesheets.push(stylesheet);
+          break;
+
         case ".html":
+          console.log("HTML FILE: ", file);
+
           const html = {} as Html;
           html.name = file;
           html.path = path.join(experience.path, file);
           html.contents = fs.readFileSync(html.path, "utf-8");
 
           experience.htmls.push(html);
+          break;
       }
     }
 

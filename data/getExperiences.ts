@@ -39,6 +39,8 @@ export async function getExperiences(): Promise<Experience[]> {
             script.contents = fs.readFileSync(script.path, "utf-8");
 
             experience.scripts.push(script);
+            break;
+
           case ".css":
             const stylesheet = {} as Stylesheet;
             stylesheet.name = file;
@@ -46,6 +48,8 @@ export async function getExperiences(): Promise<Experience[]> {
             stylesheet.contents = fs.readFileSync(stylesheet.path, "utf-8");
 
             experience.stylesheets.push(stylesheet);
+            break;
+
           case ".html":
             const html = {} as Html;
             html.name = file;
@@ -53,6 +57,7 @@ export async function getExperiences(): Promise<Experience[]> {
             html.contents = fs.readFileSync(html.path, "utf-8");
 
             experience.htmls.push(html);
+            break;
         }
       }
       experiences.push(experience);

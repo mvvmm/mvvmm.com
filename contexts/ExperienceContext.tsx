@@ -43,6 +43,7 @@ export const ExperienceProvider = ({
   const [_activeFileName, _setActiveFileName] = useState(
     experience.scripts[0].name,
   );
+
   const srcDoc = getSrcDoc({
     scripts: _experience.scripts,
     stylesheets: _experience.stylesheets,
@@ -57,6 +58,7 @@ export const ExperienceProvider = ({
             (script) => script.name === _activeFileName,
           ) || ({} as Script)
         );
+
       case ".css":
         return (
           _experience.stylesheets.find(
