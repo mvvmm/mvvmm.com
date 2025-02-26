@@ -2,6 +2,7 @@ export type File = Script | Stylesheet;
 
 export type ExperienceContext = {
   experience: Experience;
+  editorRef: React.RefObject<HTMLDivElement | null>;
   activeFile: File;
   iframeScale: number;
   srcDoc: string;

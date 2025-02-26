@@ -1,6 +1,9 @@
 "use client";
 
 import { getSrcDoc } from "@/data/getSrcDoc";
+import { setup } from "@/lib/code-mirror/setup";
+import { baseTheme } from "@/lib/code-mirror/themes/base";
+import { darkTheme } from "@/lib/code-mirror/themes/dark";
 import {
   Experience,
   ExperienceContext,
@@ -8,7 +11,17 @@ import {
   Script,
   Stylesheet,
 } from "@/types/experience";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { javascript } from "@codemirror/lang-javascript";
+import { ViewUpdate } from "@codemirror/view";
+import { EditorView } from "codemirror";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const experienceContext = createContext({} as ExperienceContext);
 
@@ -21,6 +34,8 @@ export const ExperienceProvider = ({
   iframeScale?: number;
   children: Readonly<ReactNode>;
 }) => {
+  const editorRef = useRef<HTMLDivElement>(null);
+
   const [_experience, _setExperience] = useState(experience);
   const [_activeFileName, _setActiveFileName] = useState(
     experience.scripts[0].name,
@@ -86,10 +101,41 @@ export const ExperienceProvider = ({
     });
   };
 
+  useEffect(() => {
+    if (!editorRef.current) return;
+
+    const updateListener = EditorView.updateListener.of((v: ViewUpdate) => {
+      if (v.docChanged) {
+        const newCode = v.state.doc.toString();
+        updateExperience({
+          fileName: activeFile.name,
+          updatedFileContents: newCode,
+        });
+      }
+    });
+
+    const view = new EditorView({
+      doc: activeFile.contents,
+      extensions: [
+        ...setup,
+        javascript(),
+        baseTheme,
+        // ...oneDarkTheme,
+        ...darkTheme,
+
+        updateListener,
+      ],
+      parent: editorRef.current,
+    });
+
+    return () => view.destroy(); // Cleanup on unmount
+  }, [activeFile.name]);
+
   return (
     <experienceContext.Provider
       value={{
         experience: _experience,
+        editorRef,
         activeFile,
         srcDoc,
         iframeScale,
