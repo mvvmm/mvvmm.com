@@ -106,6 +106,15 @@ export const ExperienceProvider = ({
                 : stylesheet,
             ),
           };
+        case ".html":
+          return {
+            ...prev,
+            htmls: prev.htmls.map((html) =>
+              html.name === fileName
+                ? { ...html, contents: updatedFileContents }
+                : html,
+            ),
+          };
         default:
           return prev;
       }
