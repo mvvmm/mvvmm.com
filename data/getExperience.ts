@@ -30,7 +30,6 @@ export async function getExperience({
 
       switch (file.substring(file.lastIndexOf("."))) {
         case ".js":
-          console.log("JS FILE: ", file);
           const script = {} as Script;
           script.name = file;
           script.path = path.join(experience.path, file);
@@ -40,8 +39,6 @@ export async function getExperience({
           break;
 
         case ".css":
-          console.log("CSS FILE: ", file);
-
           const stylesheet = {} as Stylesheet;
           stylesheet.name = file;
           stylesheet.path = path.join(experience.path, file);
@@ -51,8 +48,6 @@ export async function getExperience({
           break;
 
         case ".html":
-          console.log("HTML FILE: ", file);
-
           const html = {} as Html;
           html.name = file;
           html.path = path.join(experience.path, file);
