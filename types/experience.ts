@@ -5,7 +5,7 @@ export type ExperienceContext = {
   editorRef: React.RefObject<HTMLDivElement | null>;
   activeFile: File;
   iframeScale: number;
-  isIframeFullOpacity: boolean;
+  hiddenOpacity: React.RefObject<number>;
   iframeOpacity: number;
   isIframePlaying: boolean;
   srcDoc: string;

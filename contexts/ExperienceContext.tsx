@@ -43,8 +43,8 @@ export const ExperienceProvider = ({
   const [_activeFileName, _setActiveFileName] = useState(
     experience.scripts[0].name,
   );
-  const [iframeOpacity, setIframeOpacity] = useState(0.3);
-  const [isIframeFullOpacity, setIframeIsFullOpacity] = useState(true);
+  const [iframeOpacity, setIframeOpacity] = useState(1);
+  const hiddenOpacity = useRef(0.25);
   const [isIframePlaying, setIsIframePlaying] = useState(true);
 
   const toggleIframePlaying = () => {
@@ -52,7 +52,12 @@ export const ExperienceProvider = ({
   };
 
   const toggleIframeOpacity = () => {
-    setIframeIsFullOpacity((prev) => !prev);
+    if (iframeOpacity === 1) {
+      setIframeOpacity(hiddenOpacity.current);
+    } else {
+      hiddenOpacity.current = iframeOpacity;
+      setIframeOpacity(1);
+    }
   };
 
   const updateIframeOpacity = (opacity: number) => {
@@ -181,7 +186,7 @@ export const ExperienceProvider = ({
         editorRef,
         activeFile,
         iframeOpacity,
-        isIframeFullOpacity,
+        hiddenOpacity,
         isIframePlaying,
         srcDoc,
         iframeScale,

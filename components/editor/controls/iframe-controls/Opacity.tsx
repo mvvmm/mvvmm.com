@@ -50,7 +50,7 @@ export default function Opacity() {
         className="relative z-30 h-full bg-zinc-900 hover:cursor-pointer hover:text-zinc-200"
         onClick={experience.toggleIframeOpacity}
       >
-        {experience.isIframeFullOpacity ? (
+        {experience.iframeOpacity == 1 ? (
           <EyeSlashIcon className="mx-1 size-[24px]" />
         ) : (
           <EyeIcon className="mx-1 size-[24px]" />
