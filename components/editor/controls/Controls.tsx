@@ -1,11 +1,11 @@
-import BackButton from "./BackButton";
-import FileSwitcher from "./FileSwitcher";
+import EditorControls from "./editor-controls/EditorControls";
+import IframeControls from "./iframe-controls/IframeControls";
 
 export default function Controls() {
   return (
-    <div className="w-min flex items-stretch gap-2 mb-1 text-zinc-400 line-height-[1.4]">
-      <BackButton />
-      <FileSwitcher />
+    <div className="line-height-[1.4] mb-1 flex items-stretch justify-between text-zinc-400">
+      <EditorControls />
+      <IframeControls />
     </div>
   );
 }

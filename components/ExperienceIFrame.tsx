@@ -11,14 +11,17 @@ export default function ExperienceIFrame({
 
   return (
     <div
-      className={`absolute inset-0 z-0 w-full h-full dark:bg-black ${className}`}
+      className={`absolute inset-0 z-0 h-full w-full dark:bg-black ${className}`}
+      style={{
+        opacity: experience.isIframeFullOpacity ? 1 : experience.iframeOpacity,
+      }}
     >
       <iframe
         allow="camera; geolocation; microphone;"
-        className="w-full h-full bg-black"
+        className="h-full w-full bg-black"
         srcDoc={experience.srcDoc}
         title="output"
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts"
         style={{
           transform: `scale(${experience.iframeScale})`,
           transformOrigin: "top left",

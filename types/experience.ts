@@ -5,7 +5,11 @@ export type ExperienceContext = {
   editorRef: React.RefObject<HTMLDivElement | null>;
   activeFile: File;
   iframeScale: number;
+  isIframeFullOpacity: boolean;
+  iframeOpacity: number;
   srcDoc: string;
+  toggleIframeOpacity: () => void;
+  updateIframeOpacity: (opacity: number) => void;
   updateExperience: ({
     fileName,
     updatedFileContents,

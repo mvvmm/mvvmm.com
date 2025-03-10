@@ -43,6 +43,16 @@ export const ExperienceProvider = ({
   const [_activeFileName, _setActiveFileName] = useState(
     experience.scripts[0].name,
   );
+  const [iframeOpacity, setIframeOpacity] = useState(0.3);
+  const [isIframeFullOpacity, setIframeIsFullOpacity] = useState(true);
+
+  const toggleIframeOpacity = () => {
+    setIframeIsFullOpacity((prev) => !prev);
+  };
+
+  const updateIframeOpacity = (opacity: number) => {
+    setIframeOpacity(opacity);
+  };
 
   const srcDoc = getSrcDoc({
     scripts: _experience.scripts,
@@ -121,6 +131,7 @@ export const ExperienceProvider = ({
     });
   };
 
+  // Update iframe content
   useEffect(() => {
     if (!editorRef.current) return;
 
@@ -164,8 +175,12 @@ export const ExperienceProvider = ({
         experience: _experience,
         editorRef,
         activeFile,
+        iframeOpacity,
+        isIframeFullOpacity,
         srcDoc,
         iframeScale,
+        toggleIframeOpacity,
+        updateIframeOpacity,
         updateExperience,
         updateActiveFile,
       }}
