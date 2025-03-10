@@ -51,9 +51,9 @@ export default function Opacity() {
         onClick={experience.toggleIframeOpacity}
       >
         {experience.isIframeFullOpacity ? (
-          <EyeIcon className="mx-1 size-[24px]" />
-        ) : (
           <EyeSlashIcon className="mx-1 size-[24px]" />
+        ) : (
+          <EyeIcon className="mx-1 size-[24px]" />
         )}
       </button>
     </div>

@@ -7,8 +7,10 @@ export type ExperienceContext = {
   iframeScale: number;
   isIframeFullOpacity: boolean;
   iframeOpacity: number;
+  isIframePlaying: boolean;
   srcDoc: string;
   toggleIframeOpacity: () => void;
+  toggleIframePlaying: () => void;
   updateIframeOpacity: (opacity: number) => void;
   updateExperience: ({
     fileName,

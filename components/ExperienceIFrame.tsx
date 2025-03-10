@@ -19,7 +19,7 @@ export default function ExperienceIFrame({
       <iframe
         allow="camera; geolocation; microphone;"
         className="h-full w-full bg-black"
-        srcDoc={experience.srcDoc}
+        srcDoc={experience.isIframePlaying ? experience.srcDoc : ""}
         title="output"
         sandbox="allow-scripts"
         style={{
