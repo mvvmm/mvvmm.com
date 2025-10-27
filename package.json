@@ -5,17 +5,22 @@
   "scripts": {
     "clean-zone-identifiers": "node build-scripts/removeZoneIdentifiers.js",
     "copy-scripts": "node build-scripts/copy-scripts.js",
-    "predev": "yarn clean-zone-identifiers",
-    "prebuild": " yarn clean-zone-identifiers",
+    "predev": "pnpm clean-zone-identifiers",
+    "prebuild": "pnpm clean-zone-identifiers",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "biome check app/ components/ contexts/ data/ experiences/ lib/ types/",
+    "lint:fix": "biome check --write app/ components/ contexts/ data/ experiences/ lib/ types/",
+    "format": "biome format --write app/ components/ contexts/ data/ experiences/ lib/ types/"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.19.1",
     "@codemirror/commands": "^6.8.0",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/language": "^6.10.8",
+    "@codemirror/lint": "^6.9.1",
+    "@codemirror/search": "^6.5.11",
     "@codemirror/state": "^6.5.2",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@codemirror/view": "^6.36.2",
@@ -37,9 +42,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "postcss": "^8",
-    "prettier": "^3.5.0",
-    "prettier-plugin-organize-imports": "^4.1.0",
-    "prettier-plugin-tailwindcss": "^0.6.11",
     "server-only": "^0.0.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
