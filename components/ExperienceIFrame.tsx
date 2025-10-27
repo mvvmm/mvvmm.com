@@ -13,7 +13,7 @@ export default function ExperienceIFrame({
     <div
       className={`absolute inset-0 z-0 h-full w-full dark:bg-black ${className}`}
       style={{
-        opacity: experience.isIframeFullOpacity ? 1 : experience.iframeOpacity,
+        opacity: experience.iframeOpacity === 1 ? 1 : experience.iframeOpacity,
       }}
     >
       <iframe
