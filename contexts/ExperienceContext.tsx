@@ -46,9 +46,14 @@ export const ExperienceProvider = ({
   const [iframeOpacity, setIframeOpacity] = useState(1);
   const hiddenOpacity = useRef(0.25);
   const [isIframePlaying, setIsIframePlaying] = useState(true);
+  const [isPointerEventsEnabled, setIsPointerEventsEnabled] = useState(true);
 
   const toggleIframePlaying = () => {
     setIsIframePlaying((prev) => !prev);
+  };
+
+  const togglePointerEvents = () => {
+    setIsPointerEventsEnabled((prev) => !prev);
   };
 
   const toggleIframeOpacity = () => {
@@ -177,7 +182,7 @@ export const ExperienceProvider = ({
     });
 
     return () => view.destroy(); // Cleanup on unmount
-  }, [activeFile.name]);
+  }, [activeFile.name, activeFile.contents, updateExperience]);
 
   return (
     <experienceContext.Provider
@@ -188,11 +193,13 @@ export const ExperienceProvider = ({
         iframeOpacity,
         hiddenOpacity,
         isIframePlaying,
+        isPointerEventsEnabled,
         srcDoc,
         iframeScale,
         toggleIframeOpacity,
         updateIframeOpacity,
         toggleIframePlaying,
+        togglePointerEvents,
         updateExperience,
         updateActiveFile,
       }}

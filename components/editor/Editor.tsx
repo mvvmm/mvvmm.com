@@ -7,11 +7,18 @@ export const Editor = () => {
   const experience = useExperience();
 
   return (
-    <div className="absolute inset-0 flex flex-col z-10 p-2">
-      <Controls />
+    <div
+      className="absolute inset-0 z-10 flex flex-col p-2"
+      style={{
+        pointerEvents: experience.isPointerEventsEnabled ? "auto" : "none",
+      }}
+    >
+      <div style={{ pointerEvents: "auto" }}>
+        <Controls />
+      </div>
       <div
         ref={experience.editorRef}
-        className="flex-1 overflow-auto no-scrollbar"
+        className="no-scrollbar flex-1 overflow-auto"
       />
     </div>
   );

@@ -8,9 +8,11 @@ export type ExperienceContext = {
   hiddenOpacity: React.RefObject<number>;
   iframeOpacity: number;
   isIframePlaying: boolean;
+  isPointerEventsEnabled: boolean;
   srcDoc: string;
   toggleIframeOpacity: () => void;
   toggleIframePlaying: () => void;
+  togglePointerEvents: () => void;
   updateIframeOpacity: (opacity: number) => void;
   updateExperience: ({
     fileName,
