@@ -1,4 +1,4 @@
-const NUM_VERTICES = 500;
+const NUM_VERTICES = 100;
 
 class Drop {
   constructor(x, y, r) {
