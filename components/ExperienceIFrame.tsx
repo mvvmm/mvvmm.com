@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useEffect } from "react";
 import { useExperience } from "@/contexts/ExperienceContext";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
@@ -16,7 +16,7 @@ export default function ExperienceIFrame({
   });
 
   // Update iframe playing state based on visibility
-  React.useEffect(() => {
+  useEffect(() => {
     experience.setIframePlaying(isIntersecting);
   }, [isIntersecting, experience]);
 

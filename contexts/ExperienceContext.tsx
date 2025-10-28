@@ -155,6 +155,7 @@ export const ExperienceProvider = ({
   );
 
   // Update iframe content
+  // biome-ignore lint/correctness/useExhaustiveDependencies: just want to update the editor when the active file changes
   useEffect(() => {
     if (!editorRef.current) return;
 
@@ -190,7 +191,7 @@ export const ExperienceProvider = ({
     });
 
     return () => view.destroy(); // Cleanup on unmount
-  }, [activeFile.name, activeFile.contents, updateExperience]);
+  }, [activeFile.name]);
 
   return (
     <experienceContext.Provider
