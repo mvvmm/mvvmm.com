@@ -1,11 +1,21 @@
 const NUM_VERTICES = 100;
+const RED_LOW = 0;
+const RED_HIGH = 200;
+const GREEN_LOW = 0;
+const GREEN_HIGH = 200;
+const BLUE_LOW = 0;
+const BLUE_HIGH = 200;
 
 class Drop {
   constructor(x, y, r) {
     this.center = createVector(x, y);
     this.r = r;
     this.vertices = [];
-    this.color = color(random(0, 200), random(0, 200), random(0, 200));
+    this.color = color(
+      random(RED_LOW, RED_HIGH),
+      random(GREEN_LOW, GREEN_HIGH),
+      random(BLUE_LOW, BLUE_HIGH),
+    );
 
     for (let i = 0; i < NUM_VERTICES; i++) {
       const angle = map(i, 0, NUM_VERTICES, 0, TWO_PI);
