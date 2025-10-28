@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import FaviconCanvas from "../components/FaviconCanvas";
 
 export const metadata: Metadata = {
   title: "mvm",
@@ -17,7 +18,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className="bg-black text-gray-100 text-[20px]"
     >
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <FaviconCanvas />
+        {children}
+      </body>
     </html>
   );
 }
