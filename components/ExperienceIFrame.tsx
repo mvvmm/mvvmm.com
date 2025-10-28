@@ -17,7 +17,7 @@ export default function ExperienceIFrame({
 
   // Update iframe playing state based on visibility
   useEffect(() => {
-    experience.setIframePlaying(isIntersecting);
+    experience.setIframeInView(isIntersecting);
   }, [isIntersecting, experience]);
 
   return (

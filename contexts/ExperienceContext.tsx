@@ -46,15 +46,22 @@ export const ExperienceProvider = ({
   );
   const [iframeOpacity, setIframeOpacity] = useState(1);
   const hiddenOpacity = useRef(0.25);
-  const [isIframePlaying, setIsIframePlaying] = useState(true);
+  const [isIframePaused, setIsIframePaused] = useState(false);
+  const [isIframeInView, setIsIframeInView] = useState(false);
   const [isPointerEventsEnabled, setIsPointerEventsEnabled] = useState(true);
 
-  const toggleIframePlaying = () => {
-    setIsIframePlaying((prev) => !prev);
+  const isIframePlaying = !isIframePaused && isIframeInView;
+
+  const toggleIframePaused = () => {
+    setIsIframePaused((prev) => !prev);
   };
 
-  const setIframePlaying = (playing: boolean) => {
-    setIsIframePlaying(playing);
+  const setIframePaused = (paused: boolean) => {
+    setIsIframePaused(paused);
+  };
+
+  const setIframeInView = (inView: boolean) => {
+    setIsIframeInView(inView);
   };
 
   const togglePointerEvents = () => {
@@ -201,14 +208,17 @@ export const ExperienceProvider = ({
         activeFile,
         iframeOpacity,
         hiddenOpacity,
+        isIframePaused,
+        isIframeInView,
         isIframePlaying,
         isPointerEventsEnabled,
         srcDoc,
         iframeScale,
         toggleIframeOpacity,
         updateIframeOpacity,
-        toggleIframePlaying,
-        setIframePlaying,
+        toggleIframePaused,
+        setIframePaused,
+        setIframeInView,
         togglePointerEvents,
         updateExperience,
         updateActiveFile,

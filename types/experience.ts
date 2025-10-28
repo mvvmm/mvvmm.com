@@ -7,12 +7,15 @@ export type ExperienceContext = {
   iframeScale: number;
   hiddenOpacity: React.RefObject<number>;
   iframeOpacity: number;
+  isIframePaused: boolean;
+  isIframeInView: boolean;
   isIframePlaying: boolean;
   isPointerEventsEnabled: boolean;
   srcDoc: string;
   toggleIframeOpacity: () => void;
-  toggleIframePlaying: () => void;
-  setIframePlaying: (playing: boolean) => void;
+  toggleIframePaused: () => void;
+  setIframePaused: (paused: boolean) => void;
+  setIframeInView: (inView: boolean) => void;
   togglePointerEvents: () => void;
   updateIframeOpacity: (opacity: number) => void;
   updateExperience: ({
