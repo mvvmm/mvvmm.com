@@ -2,6 +2,11 @@
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import { useRef, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useExperience } from "@/contexts/ExperienceContext";
 
 export default function Opacity() {
@@ -46,17 +51,24 @@ export default function Opacity() {
         }}
       />
 
-      <button
-        type="button"
-        className="relative z-30 h-full bg-zinc-900 hover:cursor-pointer hover:text-zinc-200"
-        onClick={experience.toggleIframeOpacity}
-      >
-        {experience.iframeOpacity === 1 ? (
-          <EyeIcon className="mx-1 size-[24px]" />
-        ) : (
-          <EyeSlashIcon className="mx-1 size-[24px]" />
-        )}
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            className="relative z-30 h-full bg-zinc-900 hover:cursor-pointer hover:text-zinc-200"
+            onClick={experience.toggleIframeOpacity}
+          >
+            {experience.iframeOpacity === 1 ? (
+              <EyeIcon className="mx-1 size-[24px]" />
+            ) : (
+              <EyeSlashIcon className="mx-1 size-[24px]" />
+            )}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Toggle opacity</p>
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 }

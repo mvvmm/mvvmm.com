@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import FaviconCanvas from "../components/FaviconCanvas";
 
 export const metadata: Metadata = {
@@ -19,8 +20,10 @@ export default function RootLayout({
       className="bg-black text-gray-100 text-[20px]"
     >
       <body className="antialiased">
-        <FaviconCanvas />
-        {children}
+        <TooltipProvider>
+          <FaviconCanvas />
+          {children}
+        </TooltipProvider>
       </body>
     </html>
   );

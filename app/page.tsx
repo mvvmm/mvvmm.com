@@ -7,7 +7,7 @@ export default async function Home() {
   const experiences = await getExperiences();
 
   return (
-    <div className="w-full grid xs:grid-cols-auto-fit-full sm:grid-cols-auto-fit-600">
+    <div className="bg-black w-full grid xs:grid-cols-auto-fit-full sm:grid-cols-auto-fit-600">
       {experiences.map((experience) => (
         <Link
           href={`/editor/${experience.name}`}
