@@ -1,8 +1,8 @@
 "use client";
 
-import { useExperience } from "@/contexts/ExperienceContext";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import { useRef, useState } from "react";
+import { useExperience } from "@/contexts/ExperienceContext";
 
 export default function Opacity() {
   const experience = useExperience();
@@ -47,13 +47,14 @@ export default function Opacity() {
       />
 
       <button
+        type="button"
         className="relative z-30 h-full bg-zinc-900 hover:cursor-pointer hover:text-zinc-200"
         onClick={experience.toggleIframeOpacity}
       >
-        {experience.iframeOpacity == 1 ? (
-          <EyeSlashIcon className="mx-1 size-[24px]" />
-        ) : (
+        {experience.iframeOpacity === 1 ? (
           <EyeIcon className="mx-1 size-[24px]" />
+        ) : (
+          <EyeSlashIcon className="mx-1 size-[24px]" />
         )}
       </button>
     </div>
