@@ -10,6 +10,7 @@ export default {
     extend: {
       gridTemplateColumns: {
         "auto-fit-300": "repeat(auto-fit, minmax(300px, 1fr))",
+        "auto-fit-600": "repeat(auto-fit, minmax(600px, 1fr))",
       },
     },
   },

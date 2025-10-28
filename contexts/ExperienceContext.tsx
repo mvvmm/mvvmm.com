@@ -1,27 +1,28 @@
 "use client";
 
+import { javascript } from "@codemirror/lang-javascript";
+import type { ViewUpdate } from "@codemirror/view";
+import { EditorView } from "codemirror";
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { getSrcDoc } from "@/data/getSrcDoc";
 import { setup } from "@/lib/code-mirror/setup";
 import { baseTheme } from "@/lib/code-mirror/themes/base";
 import { darkTheme } from "@/lib/code-mirror/themes/dark";
-import {
+import type {
   Experience,
   ExperienceContext,
   File,
   Script,
   Stylesheet,
 } from "@/types/experience";
-import { javascript } from "@codemirror/lang-javascript";
-import { ViewUpdate } from "@codemirror/view";
-import { EditorView } from "codemirror";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
 
 const DEBOUNCE_THRESHOLD = 500; // ms
 
@@ -50,6 +51,10 @@ export const ExperienceProvider = ({
 
   const toggleIframePlaying = () => {
     setIsIframePlaying((prev) => !prev);
+  };
+
+  const setIframePlaying = (playing: boolean) => {
+    setIsIframePlaying(playing);
   };
 
   const togglePointerEvents = () => {
@@ -104,47 +109,50 @@ export const ExperienceProvider = ({
     _setActiveFileName(fileName);
   };
 
-  const updateExperience = ({
-    fileName,
-    updatedFileContents,
-  }: {
-    fileName: string;
-    updatedFileContents: string;
-  }) => {
-    _setExperience((prev) => {
-      switch (fileName.substring(fileName.lastIndexOf("."))) {
-        case ".js":
-          return {
-            ...prev,
-            scripts: prev.scripts.map((script) =>
-              script.name === fileName
-                ? { ...script, contents: updatedFileContents }
-                : script,
-            ),
-          };
-        case ".css":
-          return {
-            ...prev,
-            stylesheets: prev.stylesheets.map((stylesheet) =>
-              stylesheet.name === fileName
-                ? { ...stylesheet, contents: updatedFileContents }
-                : stylesheet,
-            ),
-          };
-        case ".html":
-          return {
-            ...prev,
-            htmls: prev.htmls.map((html) =>
-              html.name === fileName
-                ? { ...html, contents: updatedFileContents }
-                : html,
-            ),
-          };
-        default:
-          return prev;
-      }
-    });
-  };
+  const updateExperience = useCallback(
+    ({
+      fileName,
+      updatedFileContents,
+    }: {
+      fileName: string;
+      updatedFileContents: string;
+    }) => {
+      _setExperience((prev) => {
+        switch (fileName.substring(fileName.lastIndexOf("."))) {
+          case ".js":
+            return {
+              ...prev,
+              scripts: prev.scripts.map((script) =>
+                script.name === fileName
+                  ? { ...script, contents: updatedFileContents }
+                  : script,
+              ),
+            };
+          case ".css":
+            return {
+              ...prev,
+              stylesheets: prev.stylesheets.map((stylesheet) =>
+                stylesheet.name === fileName
+                  ? { ...stylesheet, contents: updatedFileContents }
+                  : stylesheet,
+              ),
+            };
+          case ".html":
+            return {
+              ...prev,
+              htmls: prev.htmls.map((html) =>
+                html.name === fileName
+                  ? { ...html, contents: updatedFileContents }
+                  : html,
+              ),
+            };
+          default:
+            return prev;
+        }
+      });
+    },
+    [],
+  );
 
   // Update iframe content
   useEffect(() => {
@@ -199,6 +207,7 @@ export const ExperienceProvider = ({
         toggleIframeOpacity,
         updateIframeOpacity,
         toggleIframePlaying,
+        setIframePlaying,
         togglePointerEvents,
         updateExperience,
         updateActiveFile,

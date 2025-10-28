@@ -1,6 +1,8 @@
 "use client";
 
+import React from "react";
 import { useExperience } from "@/contexts/ExperienceContext";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 export default function ExperienceIFrame({
   className = "",
@@ -8,9 +10,19 @@ export default function ExperienceIFrame({
   className?: string;
 }) {
   const experience = useExperience();
+  const { elementRef, isIntersecting } = useIntersectionObserver({
+    threshold: 0.1, // Trigger when 10% of the element is visible
+    rootMargin: "50px", // Start loading 50px before it comes into view
+  });
+
+  // Update iframe playing state based on visibility
+  React.useEffect(() => {
+    experience.setIframePlaying(isIntersecting);
+  }, [isIntersecting, experience]);
 
   return (
     <div
+      ref={elementRef as React.RefObject<HTMLDivElement>}
       className={`absolute inset-0 z-0 h-full w-full dark:bg-black ${className}`}
       style={{
         opacity: experience.iframeOpacity === 1 ? 1 : experience.iframeOpacity,

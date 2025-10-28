@@ -12,6 +12,7 @@ export type ExperienceContext = {
   srcDoc: string;
   toggleIframeOpacity: () => void;
   toggleIframePlaying: () => void;
+  setIframePlaying: (playing: boolean) => void;
   togglePointerEvents: () => void;
   updateIframeOpacity: (opacity: number) => void;
   updateExperience: ({
