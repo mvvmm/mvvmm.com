@@ -2,6 +2,7 @@
 
 import { useExperience } from "@/contexts/ExperienceContext";
 import Controls from "./controls/Controls";
+import ErrorDisplay from "./ErrorDisplay";
 
 export const Editor = () => {
   const experience = useExperience();
@@ -20,6 +21,9 @@ export const Editor = () => {
         ref={experience.editorRef}
         className="no-scrollbar flex-1 overflow-auto"
       />
+      <div style={{ pointerEvents: "auto" }} className="max-h-[50%]">
+        <ErrorDisplay />
+      </div>
     </div>
   );
 };

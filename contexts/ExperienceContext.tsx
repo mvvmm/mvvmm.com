@@ -19,6 +19,7 @@ import { darkTheme } from "@/lib/code-mirror/themes/dark";
 import type {
   Experience,
   ExperienceContext,
+  ExperienceError,
   File,
   Script,
   Stylesheet,
@@ -38,6 +39,7 @@ export const ExperienceProvider = ({
   children: Readonly<ReactNode>;
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [_experience, _setExperience] = useState(experience);
@@ -49,6 +51,7 @@ export const ExperienceProvider = ({
   const [isIframePaused, setIsIframePaused] = useState(false);
   const [isIframeInView, setIsIframeInView] = useState(false);
   const [isPointerEventsEnabled, setIsPointerEventsEnabled] = useState(true);
+  const [errors, setErrors] = useState<ExperienceError[]>([]);
 
   const isIframePlaying = !isIframePaused && isIframeInView;
 
@@ -116,6 +119,14 @@ export const ExperienceProvider = ({
     _setActiveFileName(fileName);
   };
 
+  const clearErrors = useCallback(() => {
+    setErrors([]);
+  }, []);
+
+  const addError = useCallback((error: ExperienceError) => {
+    setErrors((prev) => [...prev, error]);
+  }, []);
+
   const updateExperience = useCallback(
     ({
       fileName,
@@ -124,6 +135,9 @@ export const ExperienceProvider = ({
       fileName: string;
       updatedFileContents: string;
     }) => {
+      // Clear errors when code is updated
+      clearErrors();
+
       _setExperience((prev) => {
         switch (fileName.substring(fileName.lastIndexOf("."))) {
           case ".js":
@@ -158,7 +172,7 @@ export const ExperienceProvider = ({
         }
       });
     },
-    [],
+    [clearErrors],
   );
 
   // Update iframe content
@@ -205,6 +219,7 @@ export const ExperienceProvider = ({
       value={{
         experience: _experience,
         editorRef,
+        iframeRef,
         activeFile,
         iframeOpacity,
         hiddenOpacity,
@@ -214,6 +229,7 @@ export const ExperienceProvider = ({
         isPointerEventsEnabled,
         srcDoc,
         iframeScale,
+        errors,
         toggleIframeOpacity,
         updateIframeOpacity,
         toggleIframePaused,
@@ -222,6 +238,8 @@ export const ExperienceProvider = ({
         togglePointerEvents,
         updateExperience,
         updateActiveFile,
+        clearErrors,
+        addError,
       }}
     >
       {children}

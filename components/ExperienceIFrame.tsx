@@ -20,6 +20,21 @@ export default function ExperienceIFrame({
     experience.setIframeInView(isIntersecting);
   }, [isIntersecting, experience]);
 
+  // Listen for errors from the iframe
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Verify message type and handle error messages
+      if (event.data && event.data.type === "EXPERIENCE_ERROR") {
+        experience.addError(event.data.error);
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, [experience.addError]);
+
   return (
     <div
       ref={elementRef as React.RefObject<HTMLDivElement>}
@@ -29,6 +44,7 @@ export default function ExperienceIFrame({
       }}
     >
       <iframe
+        ref={experience.iframeRef}
         allow="camera; geolocation; microphone;"
         className="h-full w-full bg-black"
         srcDoc={experience.isIframePlaying ? experience.srcDoc : ""}

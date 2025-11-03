@@ -1,8 +1,17 @@
 export type File = Script | Stylesheet | Html;
 
+export type ExperienceError = {
+  message: string;
+  filename: string;
+  lineno: number;
+  colno: number;
+  stack: string | null;
+};
+
 export type ExperienceContext = {
   experience: Experience;
   editorRef: React.RefObject<HTMLDivElement | null>;
+  iframeRef: React.RefObject<HTMLIFrameElement | null>;
   activeFile: File;
   iframeScale: number;
   hiddenOpacity: React.RefObject<number>;
@@ -12,6 +21,7 @@ export type ExperienceContext = {
   isIframePlaying: boolean;
   isPointerEventsEnabled: boolean;
   srcDoc: string;
+  errors: ExperienceError[];
   toggleIframeOpacity: () => void;
   toggleIframePaused: () => void;
   setIframePaused: (paused: boolean) => void;
@@ -26,6 +36,8 @@ export type ExperienceContext = {
     updatedFileContents: string;
   }) => void;
   updateActiveFile: ({ fileName }: { fileName: string }) => void;
+  clearErrors: () => void;
+  addError: (error: ExperienceError) => void;
 };
 
 export type Script = {
