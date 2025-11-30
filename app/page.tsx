@@ -17,7 +17,7 @@ export default async function Home() {
           <ExperienceProvider
             experience={experience}
             iframeScale={0.5}
-            disableAudio
+            enableAudio={false}
           >
             <ExperienceIFrame className="pointer-events-none" />
           </ExperienceProvider>

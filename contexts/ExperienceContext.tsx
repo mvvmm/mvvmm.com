@@ -44,12 +44,12 @@ const experienceContext = createContext({} as ExperienceContext);
 export const ExperienceProvider = ({
   experience,
   iframeScale = 1,
-  disableAudio = false,
+  enableAudio: audioEnabled = true,
   children,
 }: {
   experience: Experience;
   iframeScale?: number;
-  disableAudio?: boolean;
+  enableAudio?: boolean;
   children: Readonly<ReactNode>;
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
@@ -84,7 +84,12 @@ export const ExperienceProvider = ({
 
   const isIframePlaying = !isIframePaused && isIframeInView;
 
+  // Helper to check if Strudel should be used
+  const shouldUseStrudel =
+    audioEnabled && _experience.strudels && _experience.strudels.length > 0;
+
   const enableAudio = useCallback(async () => {
+    if (!shouldUseStrudel) return;
     try {
       const audioContext = getAudioContext();
       await audioContext.resume();
@@ -92,7 +97,7 @@ export const ExperienceProvider = ({
     } catch (error) {
       console.error("[Audio] Failed to resume AudioContext:", error);
     }
-  }, []);
+  }, [shouldUseStrudel]);
 
   const toggleAudioPaused = useCallback(async () => {
     const newPaused = !isAudioPaused;
@@ -339,6 +344,7 @@ export const ExperienceProvider = ({
 
   // Restart drawer when switching back to a Strudel file
   useEffect(() => {
+    if (!shouldUseStrudel) return;
     const isStrudelFile = activeFile.name?.endsWith(".strudel.js");
     if (!isStrudelFile) return;
     if (!strudelReplReady) return;
@@ -375,18 +381,16 @@ export const ExperienceProvider = ({
     strudelReplReady,
     isIframePlaying,
     _experience.strudels,
+    shouldUseStrudel,
   ]);
 
   // Initialize Strudel repl and drawer
   useEffect(() => {
     if (typeof window === "undefined") return; // Only run on client
-    if (disableAudio) {
-      return; // Don't initialize Strudel if audio is disabled
+    if (!shouldUseStrudel) {
+      return; // Don't initialize Strudel if audio is disabled or no strudel files
     }
     if (strudelReplRef.current) {
-      return;
-    }
-    if (!_experience.strudels || _experience.strudels.length === 0) {
       return;
     }
 
@@ -445,10 +449,12 @@ export const ExperienceProvider = ({
       // Don't cleanup here - let the unmount effect handle cleanup
       // The REPL should persist across code changes
     };
-  }, [_experience.strudels?.length, disableAudio]); // Only re-run if number of strudel files changes or disableAudio changes
+  }, [shouldUseStrudel]); // Only re-run if enableAudio or strudel files change
 
   // Check AudioContext state and update suspended state
   useEffect(() => {
+    if (!shouldUseStrudel) return;
+
     const checkAudioContextState = () => {
       const audioContext = getAudioContext();
       setIsAudioContextSuspended(audioContext.state === "suspended");
@@ -464,10 +470,12 @@ export const ExperienceProvider = ({
     return () => {
       audioContext.removeEventListener("statechange", checkAudioContextState);
     };
-  }, []);
+  }, [shouldUseStrudel]);
 
   // Resume AudioContext on user interaction (for autoplay policy)
   useEffect(() => {
+    if (!shouldUseStrudel) return;
+
     const handleUserInteraction = async () => {
       const audioContext = getAudioContext();
       if (audioContext.state === "suspended") {
@@ -489,7 +497,7 @@ export const ExperienceProvider = ({
     });
 
     // No cleanup needed - listeners with { once: true } remove themselves
-  }, []);
+  }, [shouldUseStrudel]);
 
   // Cleanup on unmount - ensure Strudel stops when navigating away
   useEffect(() => {
@@ -511,23 +519,20 @@ export const ExperienceProvider = ({
 
   // Handle Strudel play/pause with iframe state and audio state
   useEffect(() => {
-    const shouldPlayAudio = isIframePlaying && !isAudioPaused && !disableAudio;
-
-    if (disableAudio) {
-      // Stop audio if disabled
+    if (!shouldUseStrudel) {
+      // Stop audio if disabled or no strudel files
       if (strudelReplRef.current) {
         strudelReplRef.current.stop();
       }
       return;
     }
 
+    const shouldPlayAudio = isIframePlaying && !isAudioPaused && audioEnabled;
+
     if (!strudelReplReady) {
       return;
     }
     if (!strudelReplRef.current) {
-      return;
-    }
-    if (!_experience.strudels || _experience.strudels.length === 0) {
       return;
     }
 
@@ -575,7 +580,8 @@ export const ExperienceProvider = ({
     isIframePlaying,
     isAudioPaused,
     _experience.strudels,
-    disableAudio,
+    audioEnabled,
+    shouldUseStrudel,
   ]);
 
   return (
