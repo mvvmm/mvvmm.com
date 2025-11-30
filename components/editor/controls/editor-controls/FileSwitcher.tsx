@@ -14,7 +14,7 @@ export default function FileSwitcher() {
   const experience = useExperience();
 
   return (
-    <div className="w-44 max-w-md">
+    <div className="w-32 md:w-44 max-w-md">
       <Listbox
         value={experience.activeFile.name}
         onChange={(fileName) => {
@@ -23,10 +23,10 @@ export default function FileSwitcher() {
       >
         <ListboxButton
           className={clsx(
-            "relative block w-full pl-3 text-left bg-zinc-900 hover:text-zinc-200"
+            "relative block w-full pl-3 pr-8 text-left bg-zinc-900 hover:text-zinc-200 overflow-hidden"
           )}
         >
-          {experience.activeFile.name}
+          <span className="block truncate">{experience.activeFile.name}</span>
           <ChevronDownIcon
             className="group pointer-events-none absolute -translate-y-1/2 top-1/2 right-2.5 size-[14px] fill-white/60"
             aria-hidden="true"
