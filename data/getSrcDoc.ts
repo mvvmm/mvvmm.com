@@ -53,7 +53,7 @@ export const getSrcDoc = ({
       "\n" +
       "          } else {\n" +
       "            // Wait for both Hydra library and DOM to be ready\n" +
-      "            setTimeout(initHydra, 10);\n" +
+      "            requestAnimationFrame(initHydra);\n" +
       "          }\n" +
       "        }\n" +
       "        \n" +
