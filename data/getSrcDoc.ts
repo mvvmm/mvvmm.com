@@ -25,6 +25,102 @@ function escapeStyleContent(content: string): string {
   return content.replace(/<\/style>/gi, "<\\/style>");
 }
 
+/**
+ * Returns a MediaSource polyfill script for mobile browsers that don't support MediaSource API.
+ * This prevents "can't find variable: MediaSource" errors on mobile devices.
+ *
+ * Note: There isn't a widely adopted third-party MediaSource polyfill because MediaSource
+ * is deeply tied to browser media capabilities and difficult to polyfill. This stub
+ * implementation prevents reference errors while indicating no support via isTypeSupported.
+ */
+function getMediaSourcePolyfillScript(): string {
+  return `
+    <script>
+      (function() {
+        // Polyfill MediaSource for browsers that don't support it (especially mobile)
+        var global = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : this;
+        
+        if (typeof global.MediaSource === 'undefined') {
+          // Provide a minimal no-op implementation to prevent "can't find variable" errors
+          function MediaSourceStub() {
+            var self = this;
+            var listeners = {};
+            
+            // Simple event emitter implementation
+            function addEventListener(type, listener) {
+              if (!listeners[type]) {
+                listeners[type] = [];
+              }
+              listeners[type].push(listener);
+            }
+            
+            function removeEventListener(type, listener) {
+              if (listeners[type]) {
+                var index = listeners[type].indexOf(listener);
+                if (index > -1) {
+                  listeners[type].splice(index, 1);
+                }
+              }
+            }
+            
+            function dispatchEvent(event) {
+              if (listeners[event.type]) {
+                listeners[event.type].forEach(function(listener) {
+                  try {
+                    if (typeof listener === 'function') {
+                      listener(event);
+                    } else if (listener && typeof listener.handleEvent === 'function') {
+                      listener.handleEvent(event);
+                    }
+                  } catch (e) {
+                    // Silently ignore errors in event handlers
+                  }
+                });
+              }
+              return true;
+            }
+            
+            // Return a minimal object that won't break code checking for MediaSource existence
+            return {
+              addSourceBuffer: function() { return null; },
+              endOfStream: function() {},
+              removeSourceBuffer: function() {},
+              sourceBuffers: { length: 0 },
+              readyState: 'closed',
+              duration: NaN,
+              activeSourceBuffers: { length: 0 },
+              onsourceopen: null,
+              onsourceended: null,
+              onsourceclose: null,
+              addEventListener: addEventListener,
+              removeEventListener: removeEventListener,
+              dispatchEvent: dispatchEvent
+            };
+          }
+          
+          MediaSourceStub.isTypeSupported = function() {
+            return false;
+          };
+          
+          // Set on global object and window if available
+          global.MediaSource = MediaSourceStub;
+          if (typeof window !== 'undefined') {
+            window.MediaSource = MediaSourceStub;
+          }
+          
+          // Also handle webkit prefix for older browsers
+          if (typeof global.WebKitMediaSource === 'undefined') {
+            global.WebKitMediaSource = MediaSourceStub;
+            if (typeof window !== 'undefined') {
+              window.WebKitMediaSource = MediaSourceStub;
+            }
+          }
+        }
+      })();
+    </script>
+  `;
+}
+
 export const getSrcDoc = ({
   scripts,
   stylesheets,
@@ -79,6 +175,7 @@ export const getSrcDoc = ({
     </head>
     <body>
       ${htmls.map((html) => `${html.contents}`).join("")}
+      ${getMediaSourcePolyfillScript()}
       ${getErrorCaptureScript()}
       ${scripts
         .map(
