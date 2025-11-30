@@ -1,4 +1,4 @@
-export type File = Script | Stylesheet | Html;
+export type File = Script | Stylesheet | Html | Strudel;
 
 export type ExperienceError = {
   message: string;
@@ -20,6 +20,8 @@ export type ExperienceContext = {
   isIframeInView: boolean;
   isIframePlaying: boolean;
   isPointerEventsEnabled: boolean;
+  isAudioContextSuspended: boolean;
+  isAudioPaused: boolean;
   srcDoc: string;
   errors: ExperienceError[];
   toggleIframeOpacity: () => void;
@@ -28,6 +30,8 @@ export type ExperienceContext = {
   setIframeInView: (inView: boolean) => void;
   togglePointerEvents: () => void;
   updateIframeOpacity: (opacity: number) => void;
+  enableAudio: () => Promise<void>;
+  toggleAudioPaused: () => void;
   updateExperience: ({
     fileName,
     updatedFileContents,
@@ -58,11 +62,18 @@ export type Html = {
   name: string;
 };
 
+export type Strudel = {
+  contents: string;
+  path: string;
+  name: string;
+};
+
 export type Experience = {
   path: string;
   name: string;
   scripts: Script[];
   stylesheets: Stylesheet[];
   htmls: Html[];
+  strudels: Strudel[];
   fileNames: string[];
 };

@@ -54,6 +54,12 @@ const theme = EditorView.theme({
   ".cm-line": {
     backgroundColor: lightgray2,
   },
+  // Strudel pattern highlighting - make it super visible for debugging
+  ".cm-content .cm-line span[style*='outline']": {
+    outline: "solid 3px #00ff00 !important",
+    outlineOffset: "-1px",
+    backgroundColor: "rgba(0, 255, 0, 0.1) !important",
+  },
   // ".cm-selectionMatch": { backgroundColor: "#aafe661a" },
   ".cm-matchingBracket, .cm-nonmatchingBracket": {
     color: rose,
