@@ -3,6 +3,7 @@ import "server-only";
 import {
   Experience,
   Html,
+  Hydra,
   Script,
   Strudel,
   Stylesheet,
@@ -31,6 +32,7 @@ export async function getExperience({
     experience.stylesheets = [] as Stylesheet[];
     experience.htmls = [] as Html[];
     experience.strudels = [] as Strudel[];
+    experience.hydras = [] as Hydra[];
 
     const files = await readdir(experience.path);
     for (const file of files) {
@@ -49,6 +51,14 @@ export async function getExperience({
           strudel.path = filePath;
           strudel.contents = contents;
           experience.strudels.push(strudel);
+          break;
+
+        case FILE_EXTENSIONS.HYDRA:
+          const hydra = {} as Hydra;
+          hydra.name = file;
+          hydra.path = filePath;
+          hydra.contents = contents;
+          experience.hydras.push(hydra);
           break;
 
         case FILE_EXTENSIONS.JS:

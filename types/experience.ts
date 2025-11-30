@@ -1,4 +1,4 @@
-export type File = Script | Stylesheet | Html | Strudel;
+export type File = Script | Stylesheet | Html | Strudel | Hydra;
 
 export type ExperienceError = {
   message: string;
@@ -68,6 +68,12 @@ export type Strudel = {
   name: string;
 };
 
+export type Hydra = {
+  contents: string;
+  path: string;
+  name: string;
+};
+
 export type Experience = {
   path: string;
   name: string;
@@ -75,5 +81,6 @@ export type Experience = {
   stylesheets: Stylesheet[];
   htmls: Html[];
   strudels: Strudel[];
+  hydras: Hydra[];
   fileNames: string[];
 };

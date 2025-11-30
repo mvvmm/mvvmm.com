@@ -7,6 +7,7 @@ export const FILE_EXTENSIONS = {
   CSS: ".css",
   HTML: ".html",
   STRUDEL: ".strudel.js",
+  HYDRA: ".hydra.js",
 } as const;
 
 export const IFRAME_IGNORE_EXTENSIONS = [FILE_EXTENSIONS.STRUDEL];

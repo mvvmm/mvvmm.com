@@ -14,7 +14,11 @@ export default async function Home() {
           key={experience.name}
           className="relative w-full h-64 sm:h-80 md:h-96 transition-transform hover:scale-[1.01] hover:z-10"
         >
-          <ExperienceProvider experience={experience} iframeScale={0.5}>
+          <ExperienceProvider
+            experience={experience}
+            iframeScale={0.5}
+            disableAudio
+          >
             <ExperienceIFrame className="pointer-events-none" />
           </ExperienceProvider>
         </Link>

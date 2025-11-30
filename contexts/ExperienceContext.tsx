@@ -32,6 +32,7 @@ import type {
   ExperienceError,
   File,
   Html,
+  Hydra,
   Script,
   Stylesheet,
 } from "@/types/experience";
@@ -43,10 +44,12 @@ const experienceContext = createContext({} as ExperienceContext);
 export const ExperienceProvider = ({
   experience,
   iframeScale = 1,
+  disableAudio = false,
   children,
 }: {
   experience: Experience;
   iframeScale?: number;
+  disableAudio?: boolean;
   children: Readonly<ReactNode>;
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
@@ -63,6 +66,7 @@ export const ExperienceProvider = ({
   const [_experience, _setExperience] = useState(experience);
   const [_activeFileName, _setActiveFileName] = useState(
     experience.strudels?.[0]?.name ||
+      experience.hydras?.[0]?.name ||
       experience.scripts[0]?.name ||
       experience.stylesheets[0]?.name ||
       experience.htmls[0]?.name ||
@@ -138,6 +142,7 @@ export const ExperienceProvider = ({
     stylesheets: _experience.stylesheets,
     htmls: _experience.htmls,
     strudels: _experience.strudels || [],
+    hydras: _experience.hydras || [],
   });
 
   const activeFile = (() => {
@@ -146,6 +151,7 @@ export const ExperienceProvider = ({
       // Fallback to first available file
       return (
         _experience.strudels?.[0] ||
+        _experience.hydras?.[0] ||
         _experience.scripts[0] ||
         _experience.stylesheets[0] ||
         _experience.htmls[0] ||
@@ -159,6 +165,14 @@ export const ExperienceProvider = ({
         _experience.strudels?.find(
           (strudel) => strudel.name === _activeFileName
         ) || ({ name: "", contents: "", path: "" } as File)
+      );
+    }
+
+    // Check for .hydra.js
+    if (_activeFileName.endsWith(".hydra.js")) {
+      return (
+        _experience.hydras?.find((hydra) => hydra.name === _activeFileName) ||
+        ({ name: "", contents: "", path: "" } as File)
       );
     }
 
@@ -223,6 +237,18 @@ export const ExperienceProvider = ({
               strudel.name === fileName
                 ? { ...strudel, contents: updatedFileContents }
                 : strudel
+            ),
+          };
+        }
+
+        // Check for .hydra.js
+        if (fileName.endsWith(".hydra.js")) {
+          return {
+            ...prev,
+            hydras: (prev.hydras || []).map((hydra) =>
+              hydra.name === fileName
+                ? { ...hydra, contents: updatedFileContents }
+                : hydra
             ),
           };
         }
@@ -354,6 +380,9 @@ export const ExperienceProvider = ({
   // Initialize Strudel repl and drawer
   useEffect(() => {
     if (typeof window === "undefined") return; // Only run on client
+    if (disableAudio) {
+      return; // Don't initialize Strudel if audio is disabled
+    }
     if (strudelReplRef.current) {
       return;
     }
@@ -416,7 +445,7 @@ export const ExperienceProvider = ({
       // Don't cleanup here - let the unmount effect handle cleanup
       // The REPL should persist across code changes
     };
-  }, [_experience.strudels?.length]); // Only re-run if number of strudel files changes
+  }, [_experience.strudels?.length, disableAudio]); // Only re-run if number of strudel files changes or disableAudio changes
 
   // Check AudioContext state and update suspended state
   useEffect(() => {
@@ -482,7 +511,15 @@ export const ExperienceProvider = ({
 
   // Handle Strudel play/pause with iframe state and audio state
   useEffect(() => {
-    const shouldPlayAudio = isIframePlaying && !isAudioPaused;
+    const shouldPlayAudio = isIframePlaying && !isAudioPaused && !disableAudio;
+
+    if (disableAudio) {
+      // Stop audio if disabled
+      if (strudelReplRef.current) {
+        strudelReplRef.current.stop();
+      }
+      return;
+    }
 
     if (!strudelReplReady) {
       return;
@@ -533,7 +570,13 @@ export const ExperienceProvider = ({
       strudelReplRef.current.stop();
       shouldRestartDrawerRef.current = false;
     }
-  }, [strudelReplReady, isIframePlaying, isAudioPaused, _experience.strudels]);
+  }, [
+    strudelReplReady,
+    isIframePlaying,
+    isAudioPaused,
+    _experience.strudels,
+    disableAudio,
+  ]);
 
   return (
     <experienceContext.Provider
