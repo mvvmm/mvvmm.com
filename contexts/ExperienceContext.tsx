@@ -374,7 +374,10 @@ export const ExperienceProvider = ({
       const strudelCode = _experience.strudels
         .map((s) => s.contents)
         .join("\n\n");
-      strudelReplRef.current.evaluate(strudelCode);
+      // Only evaluate if code is not empty
+      if (strudelCode.trim()) {
+        strudelReplRef.current.evaluate(strudelCode);
+      }
     }
   }, [
     activeFile.name,
@@ -541,6 +544,14 @@ export const ExperienceProvider = ({
       const strudelCode = _experience.strudels
         .map((s) => s.contents)
         .join("\n\n");
+
+      // If code is empty, stop the REPL instead of evaluating
+      if (!strudelCode.trim()) {
+        strudelReplRef.current?.stop();
+        lastStrudelCodeRef.current = strudelCode;
+        shouldRestartDrawerRef.current = false;
+        return;
+      }
 
       // Check if code changed or if this is initial load (lastStrudelCodeRef is empty)
       const codeChanged = strudelCode !== lastStrudelCodeRef.current;
