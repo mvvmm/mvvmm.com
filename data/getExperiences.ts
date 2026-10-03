@@ -8,6 +8,11 @@ const sources = import.meta.glob<string>("../experiences/*/*.{html,css,js}", {
   eager: true,
 });
 
+const metas = import.meta.glob<{ createdAt: string }>(
+  "../experiences/*/meta.json",
+  { import: "default", eager: true },
+);
+
 const collections = {
   [FILE_EXTENSIONS.JS]: "scripts",
   [FILE_EXTENSIONS.CSS]: "stylesheets",
@@ -31,6 +36,7 @@ export function getExperiences(): Experience[] {
       experience = {
         name,
         path: `experiences/${name}`,
+        createdAt: getCreatedAt(name),
         fileNames: [],
         scripts: [],
         stylesheets: [],
@@ -49,5 +55,18 @@ export function getExperiences(): Experience[] {
     });
   }
 
-  return [...experiences.values()];
+  return [...experiences.values()].sort(
+    (a, b) =>
+      b.createdAt.localeCompare(a.createdAt) || a.name.localeCompare(b.name),
+  );
+}
+
+function getCreatedAt(name: string): string {
+  const createdAt = metas[`../experiences/${name}/meta.json`]?.createdAt;
+  if (!createdAt || !/^\d{4}-\d{2}-\d{2}$/.test(createdAt)) {
+    throw new Error(
+      `experiences/${name}/meta.json needs a "createdAt" date (YYYY-MM-DD)`,
+    );
+  }
+  return createdAt;
 }

@@ -169,7 +169,7 @@ export const getSrcDoc = ({
       ${stylesheets
         .map(
           (stylesheet) =>
-            "<style>" + escapeStyleContent(stylesheet.contents) + "</style>"
+            "<style>" + escapeStyleContent(stylesheet.contents) + "</style>",
         )
         .join("")}
     </head>
@@ -180,7 +180,11 @@ export const getSrcDoc = ({
       ${scripts
         .map(
           (script) =>
-            "<script>" + escapeScriptContent(script.contents) + "</script>"
+            (script.name.endsWith(".module.js")
+              ? '<script type="module">'
+              : "<script>") +
+            escapeScriptContent(script.contents) +
+            "</script>",
         )
         .join("")}
       ${hydraCode}

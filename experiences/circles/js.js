@@ -1,5 +1,7 @@
 const MAX_CIRCLES = 50;
 const SPAWN_INTERVAL = 10;
+const START_RADIUS = 10;
+const GROWTH_RATE = 1.05;
 
 let time = 0;
 const circles = [];
@@ -9,16 +11,14 @@ function setup() {
 }
 
 function step() {
-  for (i in circles) {
-    const circle = circles[i];
-    circle.radius = circle.radius * 1.05;
+  for (const circle of circles) {
+    circle.radius *= GROWTH_RATE;
   }
   if (time === 0) {
-    const circle = {
-      radius: 10,
+    circles.push({
+      radius: START_RADIUS,
       color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-    };
-    circles.push(circle);
+    });
     if (circles.length > MAX_CIRCLES) {
       circles.shift();
     }
@@ -32,9 +32,8 @@ function step() {
 }
 
 function draw() {
-  for (i in circles) {
-    const circle = circles[i];
-    noStroke();
+  noStroke();
+  for (const circle of circles) {
     fill(circle.color);
     ellipse(windowWidth / 2, windowHeight / 2, circle.radius);
   }
