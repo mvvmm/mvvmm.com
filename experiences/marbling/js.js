@@ -1,9 +1,10 @@
-const drops = [];
 const MAX_DROPS = 250;
 const MIN_DROP_RADIUS = 25;
 const MAX_DROP_RADIUS = 125;
 const DROP_INTERVAL = 2;
 const BACKGROUND_COLOR = 0;
+
+const drops = [];
 
 function dropInk() {
   const x = random(width);

@@ -30,7 +30,7 @@ pnpm install
 pnpm run dev
 ```
 
-Open the URL printed by Astro, normally <http://localhost:4321>.
+Open the URL printed by Astro, normally <http://localhost:6886>.
 The beta Astro CLI can run development as a background process; use
 `pnpm exec astro dev status`, `pnpm exec astro dev logs`, and
 `pnpm exec astro dev stop` to inspect or stop it.
@@ -111,13 +111,25 @@ Cloudflare credentials; it does not deploy.
 - `lib/` — CodeMirror themes, editor setup, and audio initialization.
 
 Experience source files are imported as raw text at build time and serialized
-into their pages. Add a folder under `experiences/` and rebuild to create its
-editor route. Unknown routes return the custom 404 page. Browser edits remain
-in memory and are reset when navigating away or reloading.
+into their pages. Add a folder under `experiences/` with a `meta.json`
+containing its `createdAt` date (`YYYY-MM-DD`), then rebuild to create its
+editor route. The gallery lists experiences newest first. Unknown routes return
+the custom 404 page. Browser edits remain in memory and are reset when
+navigating away or reloading.
 
 The editor and iframe share one React island with their context and tooltip
 providers. Browser-dependent editor and audio code mounts through
 `client:only="react"`; the page shell and gallery links are prerendered.
+
+## Graphics experiments
+
+The [experience lab roadmap](docs/experience-lab.md) outlines ten new experiences
+and the library integration approach. Try `/editor/garden` for Three.js
+and `/editor/tide` for vgpu/WebGPU with a Canvas fallback.
+
+Experience files ending in `.module.js` execute as ES modules. Add a pinned
+import map in `scripts.html` to use browser libraries. Relative imports between
+editable files are not yet supported. Run `pnpm test` for document-builder checks.
 
 ## cf beta preview output workaround
 

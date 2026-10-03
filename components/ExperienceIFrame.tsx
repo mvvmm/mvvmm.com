@@ -22,7 +22,11 @@ export default function ExperienceIFrame({
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       // Verify message type and handle error messages
-      if (event.data && event.data.type === "EXPERIENCE_ERROR") {
+      if (
+        event.source === experience.iframeRef.current?.contentWindow &&
+        event.data &&
+        event.data.type === "EXPERIENCE_ERROR"
+      ) {
         experience.addError(event.data.error);
       }
     };

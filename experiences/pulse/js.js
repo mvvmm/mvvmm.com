@@ -1,3 +1,15 @@
+const SHAPES = 6;
+const ORBIT_RADIUS = 150;
+const SIZE = 100;
+const SIZE_PULSE = 30;
+const PULSE_SPEED = 3;
+const SPIN_SPEED = 0.02;
+const HUE_SPEED = 50;
+const SATURATION = 80;
+const BRIGHTNESS = 90;
+const OPACITY = 70;
+const TRAIL_FADE = 5;
+
 let angle = 0;
 
 function setup() {
@@ -7,26 +19,26 @@ function setup() {
 }
 
 function draw() {
-  fill(0, 0, 0, 5);
+  fill(0, 0, 0, TRAIL_FADE);
   rect(0, 0, windowWidth, windowHeight);
 
   translate(windowWidth / 2, windowHeight / 2);
   rotate(angle);
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < SHAPES; i++) {
     push();
-    rotate((TWO_PI / 6) * i);
+    rotate((TWO_PI / SHAPES) * i);
 
-    const hue = (angle * 50 + i * 60) % 360;
-    const size = 100 + sin(angle * 3 + i) * 30;
+    const hue = (angle * HUE_SPEED + i * (360 / SHAPES)) % 360;
+    const size = SIZE + sin(angle * PULSE_SPEED + i) * SIZE_PULSE;
 
-    fill(hue, 80, 90, 70);
+    fill(hue, SATURATION, BRIGHTNESS, OPACITY);
     noStroke();
-    rect(150, 0, size, size);
+    rect(ORBIT_RADIUS, 0, size, size);
     pop();
   }
 
-  angle += 0.02;
+  angle += SPIN_SPEED;
 }
 
 function windowResized() {

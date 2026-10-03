@@ -1,6 +1,7 @@
+const FRAME_RATE = 10;
+
 let board;
-let looping = true;
-let fr = 10;
+let fr = FRAME_RATE;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -8,7 +9,7 @@ function setup() {
   board = new Board();
   board.init();
   board.show();
-  frameRate(10);
+  frameRate(fr);
 }
 
 function draw() {

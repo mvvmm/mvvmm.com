@@ -22,6 +22,7 @@ export type ExperienceContext = {
   isPointerEventsEnabled: boolean;
   isAudioContextSuspended: boolean;
   isAudioPaused: boolean;
+  isAudioPlaying: boolean;
   srcDoc: string;
   errors: ExperienceError[];
   toggleIframeOpacity: () => void;
@@ -77,6 +78,7 @@ export type Hydra = {
 export type Experience = {
   path: string;
   name: string;
+  createdAt: string;
   scripts: Script[];
   stylesheets: Stylesheet[];
   htmls: Html[];

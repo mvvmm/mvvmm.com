@@ -9,11 +9,16 @@ import { useExperience } from "@/contexts/ExperienceContext";
 export default function Audio() {
   const experience = useExperience();
 
-  // Show whether audio is enabled (not whether it's currently playing)
-  // When iframe is stopped, this shows what state audio will be in when iframe resumes
-  // Audio is considered disabled if user paused it OR if AudioContext is suspended
-  const isAudioEnabled =
-    !experience.isAudioPaused && !experience.isAudioContextSuspended;
+  const hasAudio = experience.experience.strudels.length > 0;
+  const label = !hasAudio
+    ? "No audio in this experience"
+    : experience.isAudioPaused
+      ? "Enable Audio"
+      : experience.isAudioContextSuspended
+        ? "Click to start audio"
+        : experience.isAudioPlaying
+          ? "Mute audio"
+          : "Mute audio (waiting for playback)";
 
   const handleClick = async () => {
     // If audio is suspended, enable it (this will resume AudioContext)
@@ -37,8 +42,11 @@ export default function Audio() {
           className="relative z-30 h-full bg-zinc-900 hover:cursor-pointer hover:text-zinc-200"
           onClick={handleClick}
           type="button"
+          aria-label={label}
+          aria-pressed={experience.isAudioPlaying}
+          disabled={!hasAudio}
         >
-          {isAudioEnabled ? (
+          {experience.isAudioPlaying ? (
             <SpeakerWaveIcon className="mx-1 size-[24px]" />
           ) : (
             <SpeakerXMarkIcon className="mx-1 size-[24px]" />
@@ -46,13 +54,7 @@ export default function Audio() {
         </button>
       </TooltipTrigger>
       <TooltipContent>
-        <p>
-          {experience.isAudioContextSuspended
-            ? "Audio Suspended - Click to Enable"
-            : isAudioEnabled
-            ? "Disable Audio"
-            : "Enable Audio"}
-        </p>
+        <p>{label}</p>
       </TooltipContent>
     </Tooltip>
   );
