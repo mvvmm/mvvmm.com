@@ -1,5 +1,3 @@
-"use client";
-
 import { useExperience } from "@/contexts/ExperienceContext";
 import type { ExperienceError } from "@/types/experience";
 

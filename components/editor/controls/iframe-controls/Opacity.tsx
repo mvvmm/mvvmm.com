@@ -1,5 +1,3 @@
-"use client";
-
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import { useRef, useState } from "react";
 import {

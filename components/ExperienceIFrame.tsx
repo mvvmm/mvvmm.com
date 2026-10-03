@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 import { useExperience } from "@/contexts/ExperienceContext";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";

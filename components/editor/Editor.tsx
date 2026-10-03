@@ -1,5 +1,3 @@
-"use client";
-
 import { useExperience } from "@/contexts/ExperienceContext";
 import Controls from "./controls/Controls";
 import ErrorDisplay from "./ErrorDisplay";

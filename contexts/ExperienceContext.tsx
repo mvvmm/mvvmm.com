@@ -1,5 +1,3 @@
-"use client";
-
 import { javascript } from "@codemirror/lang-javascript";
 import type { ViewUpdate } from "@codemirror/view";
 import {
