@@ -24,6 +24,7 @@ import { baseTheme } from "@/lib/code-mirror/themes/base";
 import { darkTheme } from "@/lib/code-mirror/themes/dark";
 import { javascriptWithWgsl } from "@/lib/code-mirror/wgsl";
 import { prebake } from "@/lib/strudel/prebake";
+import { unlockAudio } from "@/lib/strudel/unlockAudio";
 import type {
   Experience,
   ExperienceContext,
@@ -90,9 +91,8 @@ export const ExperienceProvider = ({
   const enableAudio = useCallback(async () => {
     if (!shouldUseStrudel) return;
     try {
-      const audioContext = getAudioContext();
-      await audioContext.resume();
-      setIsAudioContextSuspended(audioContext.state !== "running");
+      await unlockAudio();
+      setIsAudioContextSuspended(getAudioContext().state !== "running");
     } catch (error) {
       console.error("[Audio] Failed to resume AudioContext:", error);
     }
@@ -479,20 +479,20 @@ export const ExperienceProvider = ({
   useEffect(() => {
     if (!shouldUseStrudel || isAudioPaused) return;
 
+    // Mobile browsers only allow audio from completed gestures, not pointerdown/touchstart.
+    const events = ["pointerup", "touchend", "click", "keydown"];
     const removeListeners = () => {
-      window.removeEventListener("pointerdown", handleUserInteraction, true);
-      window.removeEventListener("click", handleUserInteraction, true);
-      window.removeEventListener("keydown", handleUserInteraction, true);
-      window.removeEventListener("touchstart", handleUserInteraction, true);
+      for (const event of events) {
+        window.removeEventListener(event, handleUserInteraction, true);
+      }
     };
 
     const handleUserInteraction = async () => {
-      const audioContext = getAudioContext();
-      if (audioContext.state === "suspended") {
+      if (getAudioContext().state !== "running") {
         try {
-          await audioContext.resume();
+          await unlockAudio();
           const resumedState = getAudioContext().state;
-          setIsAudioContextSuspended(resumedState === "suspended");
+          setIsAudioContextSuspended(resumedState !== "running");
           if (resumedState === "running") removeListeners();
         } catch {
           // Silently fail - may already be resumed or user interaction not sufficient
@@ -501,10 +501,9 @@ export const ExperienceProvider = ({
     };
 
     // Retry until the browser permits playback; capture runs before control handlers.
-    window.addEventListener("pointerdown", handleUserInteraction, true);
-    window.addEventListener("click", handleUserInteraction, true);
-    window.addEventListener("keydown", handleUserInteraction, true);
-    window.addEventListener("touchstart", handleUserInteraction, true);
+    for (const event of events) {
+      window.addEventListener(event, handleUserInteraction, true);
+    }
 
     return removeListeners;
   }, [shouldUseStrudel, isAudioPaused]);
