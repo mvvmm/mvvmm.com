@@ -1,15 +1,16 @@
 const NUM_ROWS = 50;
 const NUM_COLS = 50;
 const THRESHOLD = 3;
+const COLORS = [
+  [255, 0, 0],
+  [0, 255, 0],
+  [0, 0, 255],
+];
 
 class Board {
   constructor() {
     this.rules = [1, 2, 0];
-    this.colors = [
-      [255, 0, 0],
-      [0, 255, 0],
-      [0, 0, 255],
-    ];
+    this.colors = COLORS;
     this.width = windowWidth / NUM_COLS;
     this.height = windowHeight / NUM_ROWS;
     this.num_rows = NUM_ROWS;

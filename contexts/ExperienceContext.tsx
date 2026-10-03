@@ -1,4 +1,3 @@
-import { javascript } from "@codemirror/lang-javascript";
 import type { ViewUpdate } from "@codemirror/view";
 import {
   highlightExtension,
@@ -23,6 +22,7 @@ import { getSrcDoc } from "@/data/getSrcDoc";
 import { setup } from "@/lib/code-mirror/setup";
 import { baseTheme } from "@/lib/code-mirror/themes/base";
 import { darkTheme } from "@/lib/code-mirror/themes/dark";
+import { javascriptWithWgsl } from "@/lib/code-mirror/wgsl";
 import { prebake } from "@/lib/strudel/prebake";
 import type {
   Experience,
@@ -68,7 +68,7 @@ export const ExperienceProvider = ({
       experience.scripts[0]?.name ||
       experience.stylesheets[0]?.name ||
       experience.htmls[0]?.name ||
-      ""
+      "",
   );
   const [iframeOpacity, setIframeOpacity] = useState(1);
   const hiddenOpacity = useRef(0.25);
@@ -77,6 +77,7 @@ export const ExperienceProvider = ({
   const [isPointerEventsEnabled, setIsPointerEventsEnabled] = useState(true);
   const [errors, setErrors] = useState<ExperienceError[]>([]);
   const [strudelReplReady, setStrudelReplReady] = useState(false);
+  const [isStrudelPlaying, setIsStrudelPlaying] = useState(false);
   const [isAudioContextSuspended, setIsAudioContextSuspended] = useState(false);
   const [isAudioPaused, setIsAudioPaused] = useState(false);
 
@@ -91,7 +92,7 @@ export const ExperienceProvider = ({
     try {
       const audioContext = getAudioContext();
       await audioContext.resume();
-      setIsAudioContextSuspended(false);
+      setIsAudioContextSuspended(audioContext.state !== "running");
     } catch (error) {
       console.error("[Audio] Failed to resume AudioContext:", error);
     }
@@ -166,7 +167,7 @@ export const ExperienceProvider = ({
     if (_activeFileName.endsWith(".strudel.js")) {
       return (
         _experience.strudels?.find(
-          (strudel) => strudel.name === _activeFileName
+          (strudel) => strudel.name === _activeFileName,
         ) || ({ name: "", contents: "", path: "" } as File)
       );
     }
@@ -183,14 +184,14 @@ export const ExperienceProvider = ({
       case ".js":
         return (
           _experience.scripts.find(
-            (script) => script.name === _activeFileName
+            (script) => script.name === _activeFileName,
           ) || ({ name: "", contents: "", path: "" } as Script)
         );
 
       case ".css":
         return (
           _experience.stylesheets.find(
-            (stylesheet) => stylesheet.name === _activeFileName
+            (stylesheet) => stylesheet.name === _activeFileName,
           ) || ({ name: "", contents: "", path: "" } as Stylesheet)
         );
       case ".html":
@@ -239,7 +240,7 @@ export const ExperienceProvider = ({
             strudels: (prev.strudels || []).map((strudel) =>
               strudel.name === fileName
                 ? { ...strudel, contents: updatedFileContents }
-                : strudel
+                : strudel,
             ),
           };
         }
@@ -251,7 +252,7 @@ export const ExperienceProvider = ({
             hydras: (prev.hydras || []).map((hydra) =>
               hydra.name === fileName
                 ? { ...hydra, contents: updatedFileContents }
-                : hydra
+                : hydra,
             ),
           };
         }
@@ -263,7 +264,7 @@ export const ExperienceProvider = ({
               scripts: prev.scripts.map((script) =>
                 script.name === fileName
                   ? { ...script, contents: updatedFileContents }
-                  : script
+                  : script,
               ),
             };
           case ".css":
@@ -272,7 +273,7 @@ export const ExperienceProvider = ({
               stylesheets: prev.stylesheets.map((stylesheet) =>
                 stylesheet.name === fileName
                   ? { ...stylesheet, contents: updatedFileContents }
-                  : stylesheet
+                  : stylesheet,
               ),
             };
           case ".html":
@@ -281,7 +282,7 @@ export const ExperienceProvider = ({
               htmls: prev.htmls.map((html) =>
                 html.name === fileName
                   ? { ...html, contents: updatedFileContents }
-                  : html
+                  : html,
               ),
             };
           default:
@@ -289,7 +290,7 @@ export const ExperienceProvider = ({
         }
       });
     },
-    [clearErrors]
+    [clearErrors],
   );
 
   // Update iframe content
@@ -323,7 +324,7 @@ export const ExperienceProvider = ({
       doc: activeFile.contents,
       extensions: [
         ...setup,
-        javascript(),
+        javascriptWithWgsl(),
         baseTheme,
         ...darkTheme,
         updateListener,
@@ -406,7 +407,7 @@ export const ExperienceProvider = ({
         // Highlight patterns in CodeMirror (drawer already filters to visible haps)
         highlightMiniLocations(editorViewRef.current, time, haps);
       },
-      [0, 0]
+      [0, 0],
     ); // drawTime: [lookbehind, lookahead]
 
     strudelReplRef.current = repl({
@@ -423,6 +424,7 @@ export const ExperienceProvider = ({
         }
       },
       onToggle: (started: boolean) => {
+        setIsStrudelPlaying(started);
         if (started && drawerRef.current && strudelReplRef.current?.scheduler) {
           // Always stop drawer first to ensure clean restart with current editor view
           // This handles both code changes and file switches
@@ -458,7 +460,7 @@ export const ExperienceProvider = ({
 
     const checkAudioContextState = () => {
       const audioContext = getAudioContext();
-      setIsAudioContextSuspended(audioContext.state === "suspended");
+      setIsAudioContextSuspended(audioContext.state !== "running");
     };
 
     // Check initial state
@@ -475,30 +477,37 @@ export const ExperienceProvider = ({
 
   // Resume AudioContext on user interaction (for autoplay policy)
   useEffect(() => {
-    if (!shouldUseStrudel) return;
+    if (!shouldUseStrudel || isAudioPaused) return;
+
+    const removeListeners = () => {
+      window.removeEventListener("pointerdown", handleUserInteraction, true);
+      window.removeEventListener("click", handleUserInteraction, true);
+      window.removeEventListener("keydown", handleUserInteraction, true);
+      window.removeEventListener("touchstart", handleUserInteraction, true);
+    };
 
     const handleUserInteraction = async () => {
       const audioContext = getAudioContext();
       if (audioContext.state === "suspended") {
         try {
           await audioContext.resume();
-          setIsAudioContextSuspended(false);
+          const resumedState = getAudioContext().state;
+          setIsAudioContextSuspended(resumedState === "suspended");
+          if (resumedState === "running") removeListeners();
         } catch {
           // Silently fail - may already be resumed or user interaction not sufficient
         }
       }
     };
 
-    // Listen for any user interaction to resume AudioContext
-    // Using { once: true } means listeners auto-remove after first trigger
-    window.addEventListener("click", handleUserInteraction, { once: true });
-    window.addEventListener("keydown", handleUserInteraction, { once: true });
-    window.addEventListener("touchstart", handleUserInteraction, {
-      once: true,
-    });
+    // Retry until the browser permits playback; capture runs before control handlers.
+    window.addEventListener("pointerdown", handleUserInteraction, true);
+    window.addEventListener("click", handleUserInteraction, true);
+    window.addEventListener("keydown", handleUserInteraction, true);
+    window.addEventListener("touchstart", handleUserInteraction, true);
 
-    // No cleanup needed - listeners with { once: true } remove themselves
-  }, [shouldUseStrudel]);
+    return removeListeners;
+  }, [shouldUseStrudel, isAudioPaused]);
 
   // Cleanup on unmount - ensure Strudel stops when navigating away
   useEffect(() => {
@@ -608,6 +617,12 @@ export const ExperienceProvider = ({
         isPointerEventsEnabled,
         isAudioContextSuspended,
         isAudioPaused,
+        isAudioPlaying:
+          !!shouldUseStrudel &&
+          isStrudelPlaying &&
+          isIframePlaying &&
+          !isAudioPaused &&
+          !isAudioContextSuspended,
         srcDoc,
         iframeScale,
         errors,

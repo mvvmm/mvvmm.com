@@ -1,23 +1,30 @@
+const SPIRALS = 3;
+const TORI = 100;
+const DRIFT = 100;
+const DRIFT_SPEED = 0.005;
+const SPIN_SPEED = 0.002;
+const DEPTH_STEP = 0.1;
+const TORUS_RADIUS = 10;
+const TUBE_RADIUS = 20;
+const BACKGROUND = 0;
+
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight, WEBGL);
 }
 
 function draw() {
-  background(0);
-  rotateY(0);
+  background(BACKGROUND);
 
-  for (let j = 0; j < 3; j++) {
+  for (let j = 0; j < SPIRALS; j++) {
     push();
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < TORI; i++) {
       translate(
-        sin(frameCount * 0.005 + j) * 100,
-        sin(frameCount * 0.005 + j) * 100,
-        i * 0.1,
+        sin(frameCount * DRIFT_SPEED + j) * DRIFT,
+        sin(frameCount * DRIFT_SPEED + j) * DRIFT,
+        i * DEPTH_STEP,
       );
-      rotateZ(frameCount * 0.002);
-      push();
-      torus(10, 20);
-      pop();
+      rotateZ(frameCount * SPIN_SPEED);
+      torus(TORUS_RADIUS, TUBE_RADIUS);
     }
     pop();
   }
