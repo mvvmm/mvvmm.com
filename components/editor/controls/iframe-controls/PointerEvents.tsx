@@ -1,5 +1,3 @@
-"use client";
-
 import { CursorArrowRippleIcon } from "@heroicons/react/20/solid";
 import { Type } from "lucide-react";
 import {

@@ -1,0 +1,27 @@
+---
+import type { GetStaticPaths } from "astro";
+import EditorExperience from "@/components/editor/EditorExperience";
+import { getExperiences } from "@/data/getExperiences";
+import type { Experience } from "@/types/experience";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export const getStaticPaths = (() =>
+  getExperiences().map((experience) => ({
+    params: { experienceName: experience.name },
+    props: { experience },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  experience: Experience;
+}
+
+const { experience } = Astro.props;
+---
+
+<BaseLayout title={`${experience.name} · mvm`}>
+  <main class="relative h-dvh">
+    <EditorExperience experience={experience} client:only="react">
+      <p slot="fallback" class="p-2 text-zinc-400">Loading editor…</p>
+    </EditorExperience>
+  </main>
+</BaseLayout>

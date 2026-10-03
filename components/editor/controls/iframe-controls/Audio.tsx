@@ -1,5 +1,3 @@
-"use client";
-
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/20/solid";
 import {
   Tooltip,

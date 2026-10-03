@@ -1,0 +1,29 @@
+---
+import ExperienceCard from "@/components/ExperienceCard";
+import { getExperiences } from "@/data/getExperiences";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const experiences = getExperiences();
+---
+
+<BaseLayout>
+  <main
+    class="bg-black w-full grid xs:grid-cols-auto-fit-full sm:grid-cols-auto-fit-600"
+  >
+    {
+      experiences.map((experience) => (
+        <a
+          href={`/editor/${experience.name}`}
+          aria-label={`Edit ${experience.name}`}
+          class="relative block w-full h-64 sm:h-80 md:h-96 transition-transform hover:scale-[1.01] hover:z-10"
+        >
+          <ExperienceCard experience={experience} client:only="react">
+            <span slot="fallback" class="sr-only">
+              {experience.name}
+            </span>
+          </ExperienceCard>
+        </a>
+      ))
+    }
+  </main>
+</BaseLayout>

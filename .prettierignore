@@ -1,2 +1,5 @@
 experiences/
-
+.astro/
+.cloudflare/
+dist/
+pnpm-lock.yaml
