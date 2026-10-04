@@ -7,7 +7,7 @@ export default defineConfig(({ isPreview }) => ({
     compatibilityDate: "2026-10-03",
     compatibilityFlags: ["nodejs_compat", "global_fetch_strictly_public"],
     entrypoint,
-    domains: isPreview ? [] : ["mvvmm.com"],
+    domains: isPreview ? [] : ["mvvmm.com", "www.mvvmm.com"],
     workersDev: true,
     env: {
       ASSETS: bindings.assets(),
