@@ -18,7 +18,7 @@ Strudel experiences with real-time iframe previews.
 Astro, the Cloudflare adapter, and `cf` use compatible, pinned beta releases.
 Update them together and check both production builds and branch previews when
 upgrading. This setup uses `astro@7.4.0-beta.1`,
-`@astrojs/cloudflare@15.0.0-beta.1`, and `cf@1.0.0-beta.12`.
+`@astrojs/cloudflare@15.0.0-beta.1`, and `cf@1.0.0-beta.18`.
 
 ## Local development
 
@@ -96,7 +96,18 @@ use the repository root and the following commands:
 
 The deploy command handles the framework build, avoiding a duplicate build step.
 Pushes to `main` publish production, including the `mvvmm.com` custom domain.
-Worker Previews are enabled for branch deployments.
+Worker Previews are enabled for branch deployments. `cf` writes the preview
+metadata directly to the `WRANGLER_OUTPUT_FILE_PATH` or
+`WRANGLER_OUTPUT_FILE_DIRECTORY` supplied by Builds, so Builds can report both
+the branch Preview URL and the immutable Deployment URL without a wrapper.
+
+When changing the deployment setup, deploy a fresh preview name, then redeploy
+the same name. Check both URLs in Workers Builds and smoke-test the gallery,
+an editor page, and the custom 404 after each deployment. This app has no secret
+bindings. If secrets are added, declare them with `bindings.secret()`; `cf`
+preserves existing preview secrets on redeployment. Do not use preview-specific
+`unsafe:inherit` bindings.
+
 GitHub Actions independently checks types, builds, and deployment output without
 Cloudflare credentials; it does not deploy.
 
@@ -130,15 +141,3 @@ and `/editor/tide` for vgpu/WebGPU with a Canvas fallback.
 Experience files ending in `.module.js` execute as ES modules. Add a pinned
 import map in `scripts.html` to use browser libraries. Relative imports between
 editable files are not yet supported. Run `pnpm test` for document-builder checks.
-
-## cf beta preview output workaround
-
-Workers Builds reads preview metadata from `WRANGLER_OUTPUT_FILE_PATH` or
-`WRANGLER_OUTPUT_FILE_DIRECTORY`. The pinned cf beta prints its preview result
-but does not write that file, which prevents Builds from showing the preview URL
-in its GitHub comment. `scripts/cf-previews-deploy.ts`, adapted from the `game`
-repository, runs `cf previews deploy` and appends the result in the format Builds
-expects. `pnpm run deploy:preview` uses this wrapper locally and in Workers Builds.
-These environment variable names are the Builds compatibility protocol; the
-wrapper does not invoke Wrangler or use a Wrangler config. Remove it once cf
-writes the output metadata itself.
